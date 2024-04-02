@@ -16,10 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -50,14 +47,18 @@ public class UserController {
         userService.saveUser(user,"ROLE_USER");
         return "redirect:/";
     }
-    @GetMapping("/boards/free")
+    @GetMapping("/boards")
     public String home(@PageableDefault(page = 1)Pageable pageable,
+                       @RequestParam(name = "team",required = false)String team,
+                       @RequestParam(name = "position",required = false)String position,
                        @RequestParam(name = "searchWord",required = false)String searchWord,
                        @RequestParam(value = "orderby",required = false,defaultValue = "id") String orderCriteria,
                        Model model){
+        model.addAttribute("team",team);
+        model.addAttribute("position",position);
         if(searchWord==null){
             Page<ContentPagingDto> contentDtos = contentService.paging(pageable,orderCriteria);
-            int blockLimit = 3;
+            int blockLimit = 5;
             int startPage = (((int) Math.ceil(((double) pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;
             int endPage = Math.min((startPage + blockLimit - 1), contentDtos.getTotalPages());
 
@@ -70,7 +71,7 @@ public class UserController {
         else {
             //Page<ContentDto> contentDtos = contentService.getBoardListBySearchword(pageable, searchWord);
             Page<ContentPagingDto> contentDtos = contentService.getBoardListBySearchword(pageable, searchWord);
-            int blockLimit = 3;
+            int blockLimit = 5;
             int startPage = (((int) Math.ceil(((double) pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;
             int endPage = Math.min((startPage + blockLimit - 1), contentDtos.getTotalPages());
 
