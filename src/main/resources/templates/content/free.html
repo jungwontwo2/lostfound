@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http//www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>자유게시판 페이지</title>
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/custom.css">
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    .notice{
+    background-color: orange;
+}
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg" style="margin-bottom: 60px;">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">Basic Board</a>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <!--            <a class="nav-link active" aria-current="page" href="/">홈</a>-->
+          <a th:if="${pageName == 'home'}" class="nav-link active" aria-current="page" href="/">Home</a>
+          <a th:unless="${pageName == 'home'}" class="nav-link" aria-current="page" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/boards/free">자유게시판</a>
+        </li>
+      </ul>
+    </div>
+    <div class="justify-content-between" id="navbarNav" style="padding: 5px 30px">
+
+      <!-- admin 일때 -->
+      <ul sec:authorize="hasRole('ROLE_ADMIN')" class="navbar-nav">
+        <li class="nav-item">
+          <button th:onclick="|location.href='@{/admin/board/write}'|" class="nav-btn">공지사항 쓰기</button>
+        </li>
+        <li class="nav-item">
+          <button th:onclick="|location.href='@{/boards/free/write}'|" class="nav-btn">글쓰기</button>
+        </li>
+      </ul>
+        <!-- user 일때 -->
+      <ul sec:authorize="hasRole('ROLE_USER')" class="navbar-nav">
+        <li class="nav-item">
+          <button th:onclick="|location.href='@{/boards/free/write}'|" class="nav-btn">글쓰기</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<!--<section class="notice">-->
+<!--  <div class="page-title">-->
+<!--    <div class="container">-->
+<!--      <h3>자유게시판</h3>-->
+<!--    </div>-->
+<!--  </div>-->
+
+  <!-- board seach area -->
+  <div id="board-search">
+    <div class="container">
+      <div class="search-window">
+        <form action="/boards/free" method="get">
+          <div class="search-wrap">
+            <label for="search" class="blind">공지사항 내용 검색</label>
+            <input id="search" type="text" name="searchWord" placeholder="검색어를 입력해주세요." value="">
+            <button type="submit" class="btn btn-dark">검색</button>
+          </div>
+          <div class="col-auto">
+            <a class="btn"
+               th:href="@{/boards/free?orderby=id}">최신 순</a>
+            <a class="btn"
+               th:href="@{/boards/free?orderby=commentCnt}">댓글 순</a>
+            <a class="btn"
+               th:href="@{/boards/free?orderby=heartCnt}">좋아요 순</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- board list area -->
+  <div id="board-list">
+    <div class="container">
+      <table class="board-table">
+        <thead>
+        <tr>
+          <th scope="col" class="th-num">번호</th>
+          <th scope="col" class="th-title">제목</th>
+          <th scope="col" class="th-writer">좋아요</th>
+          <th scope="col" class="th-heart">작성자</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="contentDto: ${contentDtos}"
+        th:classappend="${contentDto.isImportant==True}?'notice':''">
+            <td>
+              <a th:text="${contentDto.id}" th:href="@{|/boards/free/${contentDto.id}|}"></a>
+            </td>
+            <td>
+              <a th:text="|${contentDto.title} (${contentDto.commentCnt})|" th:href="@{|/boards/free/${contentDto.id}|}"></a>
+            </td>
+            <td th:text="${contentDto.heartCnt}"></td>
+            <td th:text="${contentDto.writer}"></td>
+        </tr>
+        </tbody>
+      </table>
+      <div class="pages">
+      <!-- 첫번째 페이지로 이동 -->
+      <a th:href="@{/boards/free(page=1)}">처음 </a>
+
+      <!-- 이전 링크 활성화 비활성화 -->
+      <a th:href="${contentDtos.first} ? '#' : @{/boards/free(page=${contentDtos.number})}"> 이전 </a>
+
+      <!-- 페이지 번호 링크(현재 페이지는 숫자만)
+              for(int page=startPage; page<=endPage; page++)-->
+      <span th:each="page: ${#numbers.sequence(startPage, endPage)}">
+
+		<!-- 현재페이지는 링크 없이 숫자만 -->
+            <span th:if="${page == contentDtos.number + 1}" th:text="${page}"></span>
+        <!-- 현재페이지 링크 X, 다른 페이지번호에는 링크를 보여준다 -->
+            <span th:unless="${page == contentDtos.number + 1}">
+        <a th:href="@{/boards/free(page=${page})}" th:text="${page}"></a>
+            </span>
+        </span>
+
+      <!-- 다음 링크 활성화 비활성화 -->
+      <a th:href="${contentDtos.last} ? '#' : @{/boards/free(page=${contentDtos.number + 2})}"> 다음 </a>
+
+      <!-- 마지막 페이지로 이동 -->
+      <a th:href="@{/boards/free(page=${contentDtos.totalPages})}"> 마지막 </a>
+      </div>
+    </div>
+  </div>
+</section>
+</body>
+</html>
