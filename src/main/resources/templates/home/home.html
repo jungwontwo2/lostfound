@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head">
+    <meta charset="utf-8">
+    <title>게시판</title>
+    <!-- Bootstrap 5.2.3 Version -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <!-- My CSS -->
+    <link rel="stylesheet" href="/style.css">
+
+</head>
+
+<body>
+
+<div>
+
+    <!-- Bootstrap 5.2.3 Version -->
+<!--    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>-->
+
+    <nav class="navbar navbar-expand-lg" style="margin-bottom: 60px;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Basic Board</a>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <!--            <a class="nav-link active" aria-current="page" href="/">홈</a>-->
+                        <a th:if="${pageName == 'home'}" class="nav-link active" aria-current="page" href="/">Home</a>
+                        <a th:unless="${pageName == 'home'}" class="nav-link" aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/boards/free">자유게시판</a>
+                    </li>
+                </ul>
+            </div>
+            <div sec:authorize="isAnonymous()" class="justify-content-between" id="navbarNav" style="padding: 5px 30px">
+
+                <!-- 로그인 안 했을때 -->
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <button class=" nav-btn" onclick="location.href = '/users/login'">로그인</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class=" nav-btn" onclick="location.href = '/users/join'">회원가입</button>
+                    </li>
+                </ul>
+            </div>
+            <div sec:authorize="hasRole('ROLE_USER')" class="justify-content-between" id="navbarNav" style="padding: 5px 30px">
+
+                <!-- 로그인 했을때 -->
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <button class="nav-btn" onclick="location.href = '/users/logout'">로그아웃</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-btn" onclick="location.href = '/users/my'">내 정보</button>
+                    </li>
+                </ul>
+            </div>
+            <div sec:authorize="hasRole('ROLE_ADMIN')" class="justify-content-between" id="navbarNav" style="padding: 5px 30px">
+                <!-- 어드민 사용자 일 때 -->
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <button class="nav-btn" onclick="location.href = '/admin'">관리자</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-btn" onclick="location.href = '/users/logout'">로그아웃</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-btn" onclick="location.href = '/users/my'">내 정보</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>
+
+</body>
+<!--<div style="text-align:center; max-width:100%; height:auto;">-->
+<!--    <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F257E3B3B58FE23E816" alt="한화이글스 바탕화면">-->
+<!--</div>-->
