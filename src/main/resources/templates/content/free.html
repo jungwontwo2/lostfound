@@ -4,11 +4,15 @@
     <meta charset="UTF-8">
     <title>자유게시판 페이지</title>
   <link rel="stylesheet" href="/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/custom.css">
+  <link rel="stylesheet" href="/css/custom.css">
   <link rel="stylesheet" href="/style.css">
   <style>
     .notice{
     background-color: orange;
+}
+.selected {
+  color: blue;
+  font-weight:bold;
 }
   </style>
 </head>
@@ -184,9 +188,31 @@ function getQueryParam(param) {
   var searchParams = new URLSearchParams(window.location.search);
   return searchParams.get(param);
 }
+function clearSelectedClass(selector) {
+  document.querySelectorAll(selector).forEach(function(element) {
+    element.classList.remove('selected');
+  });
+}
+
+function setSelectedClass(selector, attribute, value) {
+  document.querySelectorAll(selector).forEach(function(element) {
+    if (element.getAttribute(attribute) === value) {
+      element.classList.add('selected');
+    }
+  });
+}
   document.addEventListener("DOMContentLoaded", function() {
   // URL에서 이미 선택된 팀 정보를 가져옴
   var selectedTeam = getQueryParam('team');
+  var selectedPosition = getQueryParam('position');
+
+ // 초기 로딩 시 선택된 팀과 포지션에 따른 스타일 적용
+  if (selectedTeam) {
+    setSelectedClass("#teamSelection a.btn", "data-team", selectedTeam);
+  }
+  if (selectedPosition) {
+    setSelectedClass("#positionSelection a.btn", "data-position", selectedPosition);
+  }
 
   // 팀 선택 이벤트 리스너
   document.getElementById("teamSelection").addEventListener("click", function(e) {
