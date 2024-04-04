@@ -16,4 +16,7 @@ public interface ContentRepository extends JpaRepository<Content,Long> {
     Page<Content> findByTitleContainingOrderByIsImportantDescAndContentIdDesc(Pageable pageable, @Param("searchword") String searchwordWithWildcards);
 
     List<Content> findAll();
+
+    @Query("select c from Content c join fetch c.images where c.id=:id")
+    Content findByIdWithImage(@Param("id")Long id);
 }

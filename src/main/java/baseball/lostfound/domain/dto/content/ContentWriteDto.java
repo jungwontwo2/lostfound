@@ -18,7 +18,7 @@ public class ContentWriteDto {
     private String texts;
     private Team team;
     private Position position;
-    private List<Image> images;
+    private List<MultipartFile> images;
     private boolean isImportant;
     public static Content toEntity(ContentWriteDto contentWriteDto, CustomUserDetails user){
         Content content = Content.builder()
@@ -26,7 +26,6 @@ public class ContentWriteDto {
                 .texts(contentWriteDto.getTexts())
                 .team(contentWriteDto.getTeam())
                 .position(contentWriteDto.position)
-                .images(contentWriteDto.getImages())
                 .user(user.getUserEntity())
                 .isImportant(false)
                 .build();

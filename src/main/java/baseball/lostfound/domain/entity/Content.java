@@ -3,14 +3,18 @@ package baseball.lostfound.domain.entity;
 import baseball.lostfound.domain.enums.Position;
 import baseball.lostfound.domain.enums.Team;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Entity
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Content {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
