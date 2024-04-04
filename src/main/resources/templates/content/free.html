@@ -24,7 +24,7 @@
           <a th:unless="${pageName == 'home'}" class="nav-link" aria-current="page" href="/">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/boards/free">자유게시판</a>
+          <a class="nav-link" href="/boards">자유게시판</a>
         </li>
       </ul>
     </div>
@@ -54,37 +54,51 @@
 <!--      <h3>자유게시판</h3>-->
 <!--    </div>-->
 <!--  </div>-->
-<div style="text-align: center; margin-bottom: 20px;">
-  <a class="btn"
-     th:href="@{/boards?team=한화}">한화</a>
-  <a class="btn"
-     th:href="@{/boards?team=롯데}">롯데</a>
-  <a class="btn"
-     th:href="@{/boards?team=키움}">키움</a>
-  <a class="btn"
-     th:href="@{/boards?team=삼성}">삼성</a>
-  <a class="btn"
-     th:href="@{/boards?team=두산}">두산</a>
-  <a class="btn"
-     th:href="@{/boards?team=SSG}">SSG</a>
-  <a class="btn"
-     th:href="@{/boards?team=NC}">NC</a>
-  <a class="btn"
-     th:href="@{/boards?team=LG}">LG</a>
-  <a class="btn"
-     th:href="@{/boards?team=KIA}">KIA</a>
-  <a class="btn"
-     th:href="@{/boards?team=KT}">KT</a>
+<div style="text-align: center; margin-bottom: 20px;" id="teamSelection">
+<!--  <a class="btn" data-team="한화"-->
+<!--     th:href="@{/boards?team=한화}">한화</a>-->
+<!--  <a class="btn" data-team="롯데"-->
+<!--     th:href="@{/boards?team=롯데}">롯데</a>-->
+<!--  <a class="btn" data-team="키움"-->
+<!--     th:href="@{/boards?team=키움}">키움</a>-->
+<!--  <a class="btn" data-team="삼성"-->
+<!--     th:href="@{/boards?team=삼성}">삼성</a>-->
+<!--  <a class="btn" data-team="두산"-->
+<!--     th:href="@{/boards?team=두산}">두산</a>-->
+<!--  <a class="btn" data-team="SSG"-->
+<!--     th:href="@{/boards?team=SSG}">SSG</a>-->
+<!--  <a class="btn" data-team="NC"-->
+<!--     th:href="@{/boards?team=NC}">NC</a>-->
+<!--  <a class="btn" data-team="LG"-->
+<!--     th:href="@{/boards?team=LG}">LG</a>-->
+<!--  <a class="btn" data-team="KIA"-->
+<!--     th:href="@{/boards?team=KIA}">KIA</a>-->
+<!--  <a class="btn" data-team="KT"-->
+<!--     th:href="@{/boards?team=KT}">KT</a>-->
+  <a class="btn" data-team="한화">한화</a>
+  <a class="btn" data-team="롯데">롯데</a>
+  <a class="btn" data-team="키움">키움</a>
+  <a class="btn" data-team="삼성">삼성</a>
+  <a class="btn" data-team="두산">두산</a>
+  <a class="btn" data-team="SSG">SSG</a>
+  <a class="btn" data-team="NC">NC</a>
+  <a class="btn" data-team="LG">LG</a>
+  <a class="btn" data-team="KIA">KIA</a>
+  <a class="btn" data-team="KT">KT</a>
 </div>
-<div style="text-align: center; margin-bottom: 20px;">
-  <a class="btn"
-     th:href="@{|/boards?team=${team}&position=1루|}">1루</a>
-  <a class="btn"
-     th:href="@{|/boards?team=${team}&position=3루|}">3루</a>
-  <a class="btn"
-     th:href="@{|/boards?team=${team}&position=외야|}">외야</a>
-  <a class="btn"
-     th:href="@{|/boards?team=${team}&position=기타|}">기타</a>
+<div style="text-align: center; margin-bottom: 20px;" id="positionSelection">
+<!--  <a class="btn" data-position="1루"-->
+<!--     th:href="@{|/boards?team=${team}&position=1루|}">1루</a>-->
+<!--  <a class="btn" data-position="3루"-->
+<!--     th:href="@{|/boards?team=${team}&position=3루|}">3루</a>-->
+<!--  <a class="btn" data-position="외야"-->
+<!--     th:href="@{|/boards?team=${team}&position=외야|}">외야</a>-->
+<!--  <a class="btn" data-position="기타"-->
+<!--     th:href="@{|/boards?team=${team}&position=기타|}">기타</a>-->
+  <a class="btn" data-position="1루">1루</a>
+  <a class="btn" data-position="3루">3루</a>
+  <a class="btn" data-position="외야">외야</a>
+  <a class="btn" data-position="기타">기타</a>
 </div>
   <!-- board seach area -->
   <div id="board-search">
@@ -165,3 +179,45 @@
 </section>
 </body>
 </html>
+<script>
+function getQueryParam(param) {
+  var searchParams = new URLSearchParams(window.location.search);
+  return searchParams.get(param);
+}
+  document.addEventListener("DOMContentLoaded", function() {
+  // URL에서 이미 선택된 팀 정보를 가져옴
+  var selectedTeam = getQueryParam('team');
+
+  // 팀 선택 이벤트 리스너
+  document.getElementById("teamSelection").addEventListener("click", function(e) {
+    if (e.target && e.target.matches("a.btn")) {
+      selectedTeam = e.target.getAttribute("data-team"); // 선택된 팀 업데이트
+      let url = "/boards";
+
+      // 팀이 선택되었는지 확인
+      if (selectedTeam) {
+        url += `?team=${selectedTeam}`;
+      }
+       window.location.href = url;
+    }
+  });
+
+  // 포지션 선택 이벤트 리스너
+  document.getElementById("positionSelection").addEventListener("click", function(e) {
+    if (e.target && e.target.matches("a.btn")) {
+      const position = e.target.getAttribute("data-position");
+      let url = "/boards";
+
+      // 팀이 선택되었는지 확인
+      if (selectedTeam) {
+        url += `?team=${selectedTeam}&position=${position}`;
+      } else {
+        url += `?position=${position}`;
+      }
+
+      // 생성된 URL로 페이지 이동
+      window.location.href = url;
+    }
+  });
+});
+</script>
