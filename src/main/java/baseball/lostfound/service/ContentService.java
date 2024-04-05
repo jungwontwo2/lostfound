@@ -58,6 +58,9 @@ public class ContentService {
             return content.getId();
         }
     }
+    public void deleteContent(Long id){
+        contentRepository.delete(contentRepository.findById(id).get());
+    }
     public List<Content> getAllContents(){
         return contentRepository.findAll();
     }

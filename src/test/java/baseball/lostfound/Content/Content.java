@@ -87,6 +87,16 @@ public class Content {
         List<baseball.lostfound.domain.entity.Content> all = contentService.getAllContents();
         Assertions.assertThat(all.size()).isEqualTo(1);
     }
-
+    @Test
+    public void deleteContent() throws IOException {
+        User user = userRepository.findByLoginId("qwer").orElse(null);
+        CustomUserDetails customUserDetails = new CustomUserDetails(user);
+        ContentWriteDto contentWriteDto = new ContentWriteDto("aaa", "aaaa", Team.한화, Position.FIRST_BASE, null,false);
+        Long content = contentService.writeContent(contentWriteDto, customUserDetails);
+        baseball.lostfound.domain.entity.Content findContent = contentRepository.findById(content).orElse(null);
+        contentService.deleteContent(findContent.getId());
+        List<baseball.lostfound.domain.entity.Content> all = contentService.getAllContents();
+        Assertions.assertThat(all.size()).isEqualTo(0);
+    }
 
 }
