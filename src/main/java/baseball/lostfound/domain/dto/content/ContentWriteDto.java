@@ -26,6 +26,7 @@ public class ContentWriteDto {
                 .texts(contentWriteDto.getTexts())
                 .team(contentWriteDto.getTeam())
                 .position(contentWriteDto.position)
+                .commentCnt(0)
                 .user(user.getUserEntity())
                 .isImportant(false)
                 .build();
