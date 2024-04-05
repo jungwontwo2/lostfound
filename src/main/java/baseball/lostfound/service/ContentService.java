@@ -6,6 +6,7 @@ import baseball.lostfound.domain.dto.image.BoardImageUploadDto;
 import baseball.lostfound.domain.dto.user.CustomUserDetails;
 import baseball.lostfound.domain.entity.Content;
 import baseball.lostfound.domain.entity.Image;
+import baseball.lostfound.domain.entity.User;
 import baseball.lostfound.repository.ContentRepository;
 import baseball.lostfound.repository.ImageRepository;
 import com.amazonaws.services.s3.AmazonS3;
@@ -21,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -58,8 +60,13 @@ public class ContentService {
             return content.getId();
         }
     }
-    public void deleteContent(Long id){
-        contentRepository.delete(contentRepository.findById(id).get());
+    public void deleteContent(Long id, User user){
+        Content content = contentRepository.findById(id).orElse(null);
+        if(content!=null){
+            if(contentRepository.findById(id).get().getUser()==user){
+                contentRepository.delete(contentRepository.findById(id).get());
+            }
+        }
     }
     public List<Content> getAllContents(){
         return contentRepository.findAll();

@@ -36,5 +36,9 @@ public class Content {
     @OrderBy("id asc")
     private List<Comment> comments;
 
+    @Column(columnDefinition = "integer default 0")
+    private Integer commentCnt;
+
     private boolean isImportant;
+    public void addCommentCnt(){this.commentCnt=this.commentCnt+1;}
 }

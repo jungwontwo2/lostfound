@@ -30,6 +30,14 @@ public class Comment extends BaseEntity{
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private Comment parent;
+
+    @OneToMany(mappedBy = "parent", orphanRemoval = true)
+    @Builder.Default
+    private List<Comment> children = new ArrayList<>();
+
     private boolean isPrivate;
 
     public void update(String comment){

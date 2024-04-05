@@ -89,12 +89,12 @@ public class Content {
     }
     @Test
     public void deleteContent() throws IOException {
-        User user = userRepository.findByLoginId("qwer").orElse(null);
-        CustomUserDetails customUserDetails = new CustomUserDetails(user);
+        User findUser = userRepository.findByLoginId("qwer").orElse(null);
+        CustomUserDetails customUserDetails = new CustomUserDetails(findUser);
         ContentWriteDto contentWriteDto = new ContentWriteDto("aaa", "aaaa", Team.한화, Position.FIRST_BASE, null,false);
         Long content = contentService.writeContent(contentWriteDto, customUserDetails);
         baseball.lostfound.domain.entity.Content findContent = contentRepository.findById(content).orElse(null);
-        contentService.deleteContent(findContent.getId());
+        contentService.deleteContent(findContent.getId(),customUserDetails.getUserEntity());
         List<baseball.lostfound.domain.entity.Content> all = contentService.getAllContents();
         Assertions.assertThat(all.size()).isEqualTo(0);
     }
