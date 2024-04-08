@@ -19,7 +19,6 @@ public class ContentWriteDto {
     private Team team;
     private Position position;
     private List<MultipartFile> images;
-    private boolean isImportant;
     public static Content toEntity(ContentWriteDto contentWriteDto, CustomUserDetails user){
         Content content = Content.builder()
                 .title(contentWriteDto.getTitle())

@@ -1,6 +1,7 @@
 package baseball.lostfound.service;
 
 import baseball.lostfound.domain.dto.content.ContentPagingDto;
+import baseball.lostfound.domain.dto.content.ContentResponseDto;
 import baseball.lostfound.domain.dto.content.ContentWriteDto;
 import baseball.lostfound.domain.dto.image.BoardImageUploadDto;
 import baseball.lostfound.domain.dto.user.CustomUserDetails;
@@ -72,12 +73,18 @@ public class ContentService {
         return contentRepository.findAll();
     }
 
-    public Page<ContentPagingDto> paging(Pageable pageable, String criteria) {
+    public ContentResponseDto getContent(Long id){
+        Content content = contentRepository.findById(id).orElse(null);
+        ContentResponseDto contentResponseDto = ContentResponseDto.builder().content(content).build();
+        return contentResponseDto;
+    }
+
+    public Page<ContentPagingDto>  paging(Pageable pageable, String criteria) {
         int page=pageable.getPageNumber()-1;//page위치에 있는 값은 0부터 시작한다.
         int pageLimit = 8;//한페이지에 보여줄 글 개수
         //System.out.println("zz");
         PageRequest pageRequest = PageRequest.of(page, pageLimit, Sort.by(Sort.Order.desc("isImportant"), Sort.Order.desc(criteria),Sort.Order.desc("id")));
-        Page<Content> contents = contentRepository.findAll(pageRequest);
+        Page<Content> contents = contentRepository.findAllWithNickname(pageRequest);
         Page<ContentPagingDto> contentsDto = contents.map(content -> new ContentPagingDto(content));
         return contentsDto;
     }

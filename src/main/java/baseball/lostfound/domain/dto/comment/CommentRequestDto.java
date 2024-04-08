@@ -1,10 +1,17 @@
 package baseball.lostfound.domain.dto.comment;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class CommentRequestDto {
-    String comment;
+    private String comment;
+
+    private boolean isPrivate;
+
+    public boolean getIsPrivate(){
+        return isPrivate;
+    }
 }

@@ -33,10 +33,10 @@
         <tbody>
         <tr th:each="contentDto: ${contentDtos}">
           <td>
-            <a th:text="${contentDto.id}" th:href="@{|/boards/free/${contentDto.id}|}"></a>
+            <a th:text="${contentDto.id}" th:href="@{|/contents/free/${contentDto.id}|}"></a>
           </td>
           <td>
-            <a th:text="${contentDto.title}" th:href="@{|/boards/free/${contentDto.id}|}"></a>
+            <a th:text="${contentDto.title}" th:href="@{|/contents/free/${contentDto.id}|}"></a>
           </td>
           <td th:text="${contentDto.writer}"></td>
         </tr>

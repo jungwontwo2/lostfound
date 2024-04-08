@@ -80,40 +80,7 @@ public class UserController {
             return new ResponseDto<>(1,"중복된 닉네임입니다.",false);
         }
     }
-    @GetMapping("/boards")
-    public String home(@PageableDefault(page = 1)Pageable pageable,
-                       @RequestParam(name = "team",required = false)String team,
-                       @RequestParam(name = "position",required = false)String position,
-                       @RequestParam(name = "searchWord",required = false)String searchWord,
-                       @RequestParam(value = "orderby",required = false,defaultValue = "id") String orderCriteria,
-                       Model model){
-        model.addAttribute("team",team);
-        model.addAttribute("position",position);
-        if(searchWord==null){
-            Page<ContentPagingDto> contentDtos = contentService.paging(pageable,orderCriteria);
-            int blockLimit = 5;
-            int startPage = (((int) Math.ceil(((double) pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;
-            int endPage = Math.min((startPage + blockLimit - 1), contentDtos.getTotalPages());
 
-
-
-            model.addAttribute("contentDtos", contentDtos);
-            model.addAttribute("startPage", startPage);
-            model.addAttribute("endPage", endPage);
-        }
-        else {
-            //Page<ContentDto> contentDtos = contentService.getBoardListBySearchword(pageable, searchWord);
-            Page<ContentPagingDto> contentDtos = contentService.getBoardListBySearchword(pageable, searchWord);
-            int blockLimit = 5;
-            int startPage = (((int) Math.ceil(((double) pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;
-            int endPage = Math.min((startPage + blockLimit - 1), contentDtos.getTotalPages());
-
-            model.addAttribute("contentDtos", contentDtos);
-            model.addAttribute("startPage", startPage);
-            model.addAttribute("endPage", endPage);
-        }
-        return "content/free";
-    }
     @GetMapping("/users/login")
     public String loginForm(@RequestParam(value = "error",required = false)String error,
                             @RequestParam(value = "exception",required = false)String exception,
@@ -136,6 +103,10 @@ public class UserController {
             bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
             return "users/login";
         }
+        return "redirect:/";
+    }
+    @GetMapping("/users/logout")
+    public String logout(){
         return "redirect:/";
     }
 }

@@ -5,17 +5,39 @@
   <link rel="stylesheet" href="/style.css">
   <title>게시판</title>
   <nav>글 쓰기 화면</nav>
+  <style>
+    .team-container{
+    display: inline-block;
+    margin-right: 5px;
+    }
+    .position-container{
+    display: inline-block;
+    margin-right: 5px;
+    }
+  </style>
 </head>
 <body>
 <div>
   <br/>
   <div align="center">
-    <form action="/boards/free/write" method="post" th:object="${content}" enctype="multipart/form-data">
+    <form action="/contents/write" method="post" th:object="${content}" enctype="multipart/form-data">
       <div class="form-group" align="left">
-        <label for="title">글 제목 : </label>
+        <label for="title" style="font-weight: bold;">글 제목 : </label>
         <input type="text" id="title" name="title" th:field="*{title}" placeholder="제목을 입력하세요" width="400px">
         <br/><br/>
-        <label for="texts">글 내용 : </label>
+        <div style="font-weight: bold;">팀</div>
+        <div th:each="team : ${teams}" class="team-container">
+          <input type="radio" th:id="${'team_' + team}" th:name="team" th:value="${team}" />
+          <label th:for="${'team_' + team}" th:text="${team}">Team</label>
+        </div>
+        <br/><br/>
+      <div style="font-weight: bold;">위치</div>
+        <div th:each="position : ${positions}" class="position-container">
+          <input type="radio" th:id="${'position_' + position}" th:name="position" th:value="${position}" />
+          <label th:for="${'position_' + position}" th:text="${position}">Position</label>
+        </div>
+        <br/><br/>
+        <label for="texts" style="font-weight: bold;" >글 내용</label>
         <br/><br/>
         <div id="byteCounter">0 바이트</div>
         <textarea id="texts" name="texts" th:field="*{texts}" placeholder="0~500바이트 입력이 가능합니다."></textarea>

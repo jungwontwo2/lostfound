@@ -1,6 +1,7 @@
 package baseball.lostfound.service;
 
 import baseball.lostfound.domain.dto.comment.CommentRequestDto;
+import baseball.lostfound.domain.dto.comment.CommentResponseDto;
 import baseball.lostfound.domain.dto.user.CustomUserDetails;
 import baseball.lostfound.domain.entity.Comment;
 import baseball.lostfound.domain.entity.Content;
@@ -11,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -63,5 +66,12 @@ public class CommentService {
         comment.update(commentRequestDto.getComment());
         commentRepository.save(comment);
         return comment.getId();
+    }
+
+    public List<CommentResponseDto> commentDtoList(Long id) {
+        Content content = contentRepository.findById(id).orElse(null);
+        List<Comment> commentList = commentRepository.findByContent(content);
+        List<CommentResponseDto> collect = commentList.stream().map(comment -> new CommentResponseDto(comment)).toList();
+        return collect;
     }
 }
