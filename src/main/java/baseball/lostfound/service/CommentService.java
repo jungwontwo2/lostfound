@@ -10,6 +10,7 @@ import baseball.lostfound.repository.ContentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +21,7 @@ public class CommentService {
     private final ContentRepository contentRepository;
 
     //댓글작성
-    public Long writeComment(CommentRequestDto commentRequestDto, Long contentId, String parentId, Authentication authentication){
+    public Long writeComment(CommentRequestDto commentRequestDto, Long contentId, String parentId, Authentication authentication,boolean isPrivate){
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
         User user = customUserDetails.getUserEntity();
         //사용자와 게시물을 찾음
@@ -45,10 +46,21 @@ public class CommentService {
                 .content(content)
                 .user(user)
                 .parent(parentComment)//부모 댓글 설정
+                .isPrivate(isPrivate)
                 .build();
         //comment를 만들었다면 save함
         commentRepository.save(comment);
         //contentRepository.save(content);
+        return comment.getId();
+    }
+    public void deleteComment(Long commentId){
+        Comment comment = commentRepository.findById(commentId).orElse(null);
+        commentRepository.delete(comment);
+    }
+    @Transactional
+    public Long updateComment(CommentRequestDto commentRequestDto,Long commentId){
+        Comment comment = commentRepository.findById(commentId).orElse(null);
+        comment.update(commentRequestDto.getComment());
         return comment.getId();
     }
 }
