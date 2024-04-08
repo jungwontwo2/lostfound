@@ -61,6 +61,7 @@ public class CommentService {
     public Long updateComment(CommentRequestDto commentRequestDto,Long commentId){
         Comment comment = commentRepository.findById(commentId).orElse(null);
         comment.update(commentRequestDto.getComment());
+        commentRepository.save(comment);
         return comment.getId();
     }
 }
