@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+<!-- 최상위 댓글에 대한 템플릿 조각 호출 -->
+<div th:each="comment : ${comments}" th:if="${comment.parentId == null}">
+  <div th:replace="this :: commentFragment(${comment}, ${loggedInNickname}, ${contentId})"></div>
+</div>
+
+<!-- Thymeleaf 템플릿 조각 정의 -->
+<div th:fragment="commentFragment(comment, loggedInNickname, contentId)">
+  <div>
+    <h5 class="mt-0" th:text="${comment.nickname}">User Name</h5>
+    <p th:text="${comment.comment}" th:id="'comment-' + ${comment.id}">Comment Content</p>
+    <small class="text-muted" th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}">Comment Date</small>
+    <div th:if="${comment.nickname == loggedInNickname}">
+      <button type="button" class="edit-comment" th:data-board-id="${contentId}" th:data-comment-id="${comment.id}" th:data-comment-text="${comment.comment}">수정</button>
+    </div>
+    <div th:if="${comment.children.isEmpty()}">
+      <!-- 자식 댓글이 없는 경우에 대댓글 작성 폼 표시 -->
+    </div>
+  </div>
+  <!-- 재귀적으로 자식 댓글 처리 -->
+  <div th:each="childComment : ${comment.children}" th:replace="this :: commentFragment(${childComment}, ${loggedInNickname}, ${contentId})"></div>
+</div>
+
+</body>
+</html>

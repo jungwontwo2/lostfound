@@ -84,15 +84,6 @@ public class ContentController {
                              @ModelAttribute("commentRequestDto")CommentRequestDto commentRequestDto) {
         ContentResponseDto contentDto = contentService.getContent(id);
         List<CommentResponseDto> commentResponseDtos = commentService.commentDtoList(id);
-        for (CommentResponseDto commentResponseDto : commentResponseDtos) {
-            System.out.println("commentResponseDto.getComment() = " + commentResponseDto.getComment());
-            List<CommentResponseDto> children = commentResponseDto.getChildren();
-            for (CommentResponseDto child : children) {
-                System.out.println("child.getComment() = " + child.getComment());
-                commentResponseDto.getId();
-            }
-        }
-
         try{
             CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
             String nickname = principal.getNickname();
