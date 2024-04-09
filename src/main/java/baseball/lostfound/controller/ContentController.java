@@ -84,11 +84,12 @@ public class ContentController {
                              @ModelAttribute("commentRequestDto")CommentRequestDto commentRequestDto) {
         ContentResponseDto contentDto = contentService.getContent(id);
         List<CommentResponseDto> commentResponseDtos = commentService.commentDtoList(id);
-
-        //CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
-        //String nickname = principal.getNickname();
-
-        //model.addAttribute("nickName",nickname);
+        try{
+            CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
+            String nickname = principal.getNickname();
+            model.addAttribute("nickName",nickname);
+        }catch (Exception e){
+        }
         model.addAttribute("content",contentDto);
         model.addAttribute("comments",commentResponseDtos);
         return "content/content-page";

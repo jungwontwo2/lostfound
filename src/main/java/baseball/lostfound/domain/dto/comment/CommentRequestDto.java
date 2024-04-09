@@ -14,4 +14,7 @@ public class CommentRequestDto {
     public boolean getIsPrivate(){
         return isPrivate;
     }
+    public void setIsPrivate(boolean isPrivate){
+        this.isPrivate=isPrivate;
+    }
 }
