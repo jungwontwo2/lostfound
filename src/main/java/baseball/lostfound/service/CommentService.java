@@ -51,6 +51,10 @@ public class CommentService {
                 .parent(parentComment)//부모 댓글 설정
                 .isPrivate(isPrivate)
                 .build();
+        if(parentComment!=null){
+            parentComment.addChildrenComment(comment);
+            commentRepository.save(parentComment);
+        }
         //comment를 만들었다면 save함
         commentRepository.save(comment);
         //contentRepository.save(content);

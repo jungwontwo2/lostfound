@@ -25,7 +25,7 @@ public class CommentResponseDto {
         this.id = comment.getId();
         this.comment = comment.getComment();
         this.nickname = comment.getUser().getNickname();
-        this.children=new ArrayList<>();
+        this.children=comment.getChildren().stream().map(children->children.toCommentResponseDto(children)).toList();
         this.hasChildren=!comment.getChildren().isEmpty();
         this.hasParent= comment.getParent() != null;//comment.getParent가 null이 아니면 parent가 있다는 뜻(true반환)
         this.isPrivate=comment.isPrivate();

@@ -19,14 +19,6 @@
         <br><br>
         <h3>내용</h3>
         <div class="texts" th:text="*{texts}"></div>
-<!--        <div class="mb-3" th:if="${content.imageUrls != null}">-->
-<!--          <label class="form-label">이미지</label>-->
-<!--          <div>-->
-<!--            <th:block th:each="imageUrl : ${content.imageUrls}">-->
-<!--              <img th:src="${imageUrl}" alt="Image" width="200px" height="200px">-->
-<!--            </th:block>-->
-<!--          </div>-->
-<!--        </div>-->
         <!-- Comments -->
         <br>
         <div class="card my-4" th:if="${comments.size()} != 0">
@@ -34,64 +26,53 @@
           <div class="comment">
             <div th:each="comment : ${comments}">
               <div class="media mb-4">
-                <div class="media-body" th:unless="${comment.hasParent==true}">
-                  <h5 class="mt-0" th:text="${comment.getNickname()}">User Name</h5>
-                  <p th:text="${comment.getComment()}" th:id="'comment-' + ${comment.getId()}">Comment content</p>
-                  <small class="text-muted" th:text="${#temporals.format(comment.getCreatedAt(), 'yyyy-MM-dd HH:mm')}">Comment Date</small>
-                  <div th:if="${comment.nickname == loggedInNickname}">
-                    <button type="button" class="edit-comment"  th:data-board-id="${content.id}" th:data-comment-id="${comment.getId()}" th:data-comment-text="${comment.getComment()}" >수정</button>
-                  </div>
-                  <!-- 대댓글 폼 -->
-                  <form th:if="${comment.hasChildren == false}" method="post">
-                    <input type="hidden" name="parentId" th:value="${comment.id}">
-                    <textarea name="comment" class="comment"></textarea>
-                    <div>
-                    <input type="checkbox" class="form-check-input" th:id="|secretComment-${comment.id}|" th:field="${commentRequestDto.isPrivate}">
-                      <label class="form-check-label" th:for="|secretComment-${comment.id}|">비밀댓글</label>
+                <div class="media-body" th:if="${comment.hasParent==false}">
+                    <h5 class="mt-0" th:text="${comment.getNickname()}">User Name</h5>
+                    <p th:text="${comment.getComment()}" th:id="'comment-' + ${comment.getId()}">Comment content</p>
+                    <small class="text-muted" th:text="${#temporals.format(comment.getCreatedAt(), 'yyyy-MM-dd HH:mm')}">Comment Date</small>
+                    <div th:if="${comment.nickname == loggedInNickname}">
+                      <button type="button" class="edit-comment"  th:data-board-id="${content.id}" th:data-comment-id="${comment.getId()}" th:data-comment-text="${comment.getComment()}" >수정</button>
                     </div>
-                    <button type="submit" class="btn btn-primary" th:formaction="@{|/contents/${content.id}/comment|}">대댓글 작성</button>
-                  </form>
                 </div>
-                <div class="media-body ml-auto" th:if="${comment.hasParent==true}">
-                  <h5 class="mt-0" th:text="${comment.getNickname()}">User Name</h5>
-                  <p th:text="${comment.getComment()}" th:id="'comment-' + ${comment.getId()}">Comment content</p>
-                  <small class="text-muted" th:text="${#temporals.format(comment.getCreatedAt(), 'yyyy-MM-dd HH:mm')}">Comment Date</small>
-                  <div th:if="${comment.nickname == loggedInNickname}">
-                    <button type="button" class="edit-comment"  th:data-board-id="${content.id}" th:data-comment-id="${comment.getId()}" th:data-comment-text="${comment.getComment()}" >수정</button>
+                  <div th:if="${comment.hasChildren==true}" class="media-body ml-auto">
+                      <div th:each="childComment : ${comment.children}">
+                          <h5 class="mt-0" th:text="${comment.getNickname()}">User Name</h5>
+                          <p th:text="${comment.getComment()}" th:id="'comment-' + ${comment.getId()}">Comment content</p>
+                          <small class="text-muted" th:text="${#temporals.format(comment.getCreatedAt(), 'yyyy-MM-dd HH:mm')}">Comment Date</small>
+                          <div th:if="${comment.nickname == loggedInNickname}">
+                              <button type="button" class="edit-comment"  th:data-board-id="${content.id}" th:data-comment-id="${comment.getId()}" th:data-comment-text="${comment.getComment()}" >수정</button>
+                          </div>
+                      </div>
+<!--                          <div th:if="${comment.children.isEmpty()}">-->
+                      <form method="post">
+                          <input type="hidden" name="parentId" th:value="${comment.id}">
+                          <textarea name="comment" class="comment"></textarea>
+                          <div>
+                              <input type="checkbox" class="form-check-input" th:id="|secretComment-${comment.id}|" th:field="${commentRequestDto.isPrivate}">
+                              <label class="form-check-label" th:for="|secretComment-${comment.id}|">비밀댓글</label>
+                          </div>
+                          <button type="submit" class="btn btn-primary" th:formaction="@{|/contents/${content.id}/comment|}">대댓글 작성</button>
+                      </form>
                   </div>
-                  <!-- 대댓글 폼 -->
-                  <form th:if="${comment.hasChildren == false}" method="post">
-                    <input type="hidden" name="parentId" th:value="${comment.id}">
-                    <textarea name="comment" class="comment"></textarea>
-                    <div class="form-check">
-                      <input type="checkbox" class="form-check-input" th:id="|secretComment-${comment.id}|" th:field="${commentRequestDto.isPrivate}">
-                      <label class="form-check-label" th:for="|secretComment-${comment.id}|">비밀댓글</label>
-                    </div>
-                    <button type="submit" class="btn btn-primary" th:formaction="@{|/contents/${content.id}/comment|}">대댓글 작성</button>
-                  </form>
-                </div>
+                  <div th:if="${comment.hasChildren==false}" class="media-body">
+                      <form method="post">
+                          <input type="hidden" name="parentId" th:value="${comment.id}">
+                          <textarea name="comment" class="comment"></textarea>
+                          <div>
+                              <input type="checkbox" class="form-check-input" th:id="|secretComment-${comment.id}|" th:field="${commentRequestDto.isPrivate}">
+                              <label class="form-check-label" th:for="|secretComment-${comment.id}|">비밀댓글</label>
+                          </div>
+                          <button type="submit" class="btn btn-primary" th:formaction="@{|/contents/${content.id}/comment|}">대댓글 작성</button>
+                      </form>
+                  </div>
               </div>
             </div>
           </div>
         </div>
+
         <!-- Comments Form -->
         <h3>댓글 작성</h3>
-        <form th:if="${parentId}"  method="post" th:object="${commentRequestDto}">
-          <textarea name="comment" class="comment" th:field="*{comment}"></textarea>
-          <!-- parentId를 전달하는 hidden input -->
-          <input type="hidden" name="parentId" th:value="${parentId}">
-          <div class="form-check">
-            <input type="checkbox" class="form-check-input" th:id="|secretComment|" th:field="*{isPrivate}">
-            <label class="form-check-label" th:for="|secretComment|">비밀댓글</label>
-          </div>
-          <div class="row select-btn">
-            <div class="col" align="left">
-              <button type="submit" class="select-btn" th:formaction="@{|/contents/${content.id}/comment|}">Submit</button>
-            </div>
-          </div>
-        </form>
-
-        <form th:unless="${parentId}"  method="post" th:object="${commentRequestDto}">
+        <form method="post" th:object="${commentRequestDto}">
           <textarea name="comment" class="comment" th:field="*{comment}"></textarea>
           <div class="form-check">
             <input type="checkbox" class="form-check-input" th:id="|secretComment|" th:field="*{isPrivate}">
@@ -103,6 +84,19 @@
             </div>
           </div>
         </form>
+      </div>
+<!--        <form th:unless="${parentId}"  method="post" th:object="${commentRequestDto}">-->
+<!--          <textarea name="comment" class="comment" th:field="*{comment}"></textarea>-->
+<!--          <div class="form-check">-->
+<!--            <input type="checkbox" class="form-check-input" th:id="|secretComment|" th:field="*{isPrivate}">-->
+<!--            <label class="form-check-label" th:for="|secretComment|">비밀댓글</label>-->
+<!--          </div>-->
+<!--          <div class="row select-btn">-->
+<!--            <div class="col" align="left">-->
+<!--              <button type="submit" class="select-btn" th:formaction="@{|/contents/${content.id}/comment|}">Submit</button>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </form>-->
       </div>
         <div class="select-btn">
           <button th:formaction="@{|/contents/editPage/${content.id}|}">수정</button>

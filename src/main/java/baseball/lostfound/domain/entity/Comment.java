@@ -1,5 +1,6 @@
 package baseball.lostfound.domain.entity;
 
+import baseball.lostfound.domain.dto.comment.CommentResponseDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,5 +43,11 @@ public class Comment extends BaseEntity{
 
     public void update(String comment){
         this.comment=comment;
+    }
+    public void addChildrenComment(Comment comment){
+        this.children.add(comment);
+    }
+    public CommentResponseDto toCommentResponseDto(Comment comment){
+        return new CommentResponseDto(comment);
     }
 }
