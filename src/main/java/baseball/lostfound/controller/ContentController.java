@@ -19,6 +19,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -73,7 +75,16 @@ public class ContentController {
         return "content/write-page";
     }
     @PostMapping("/contents/write")
-    public String writeContent(ContentWriteDto contentWriteDto,Authentication authentication) throws IOException {
+    public String writeContent(@Validated @ModelAttribute("content")ContentWriteDto contentWriteDto,
+                               BindingResult bindingResult,
+                               Authentication authentication,Model model) throws IOException {
+        if(bindingResult.hasErrors()){
+            StringBuilder errorMessage = new StringBuilder("제목, 내용, 팀, 위치를 올바르게 입력해주세요.\n");
+            model.addAttribute("teams", Team.values());
+            model.addAttribute("positions", Position.values());
+            model.addAttribute("errorMessage",errorMessage.toString());
+            return "content/write-page";
+        }
         CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
         contentService.writeContent(contentWriteDto,principal);
         return "redirect:/contents";
