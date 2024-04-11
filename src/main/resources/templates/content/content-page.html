@@ -19,6 +19,11 @@
         <br><br>
         <h3>내용</h3>
         <div class="texts" th:text="*{texts}"></div>
+        <div style="text-align: center;">
+          <th:block th:each="image : ${content.images}">
+              <img th:src="${image.url}" alt="Image" width="400px" height="400px">
+          </th:block>
+        </div>
         <!-- Comments -->
         <br>
         <div class="card my-4" th:if="${comments.size()} != 0">

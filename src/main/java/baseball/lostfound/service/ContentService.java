@@ -91,13 +91,19 @@ public class ContentService {
             Page<ContentPagingDto> contentsDto = contents.map(content -> new ContentPagingDto(content));
             return contentsDto;
         }
-        else if(position==null){
-            Page<Content> contents = contentRepository.findAllWithNicknameByTeam(pageRequest,team);
+        else if(position==null & team == null){
+            Page<Content> contents = contentRepository.findAll(pageRequest);
             Page<ContentPagingDto> contentsDto = contents.map(content -> new ContentPagingDto(content));
             return contentsDto;
         }
-        else{
+        else if(team==null){
             Page<Content> contents = contentRepository.findAllWithNicknameByPosition(pageRequest,position);
+            Page<ContentPagingDto> contentsDto = contents.map(content -> new ContentPagingDto(content));
+            return contentsDto;
+        }
+        else {//position == null
+//        else if(team==null & position==null){
+            Page<Content> contents = contentRepository.findAllWithNicknameByTeam(pageRequest,team);
             Page<ContentPagingDto> contentsDto = contents.map(content -> new ContentPagingDto(content));
             return contentsDto;
         }
