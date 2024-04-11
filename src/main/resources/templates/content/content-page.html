@@ -31,24 +31,26 @@
           <div class="comment">
             <div th:each="comment : ${comments}">
               <div class="media mb-4">
-                <div class="media-body" th:if="${comment.hasParent==false}">
-                    <h5 class="mt-0" th:text="${comment.getNickname()}">User Name</h5>
-                    <p th:text="${comment.getComment()}" th:id="'comment-' + ${comment.getId()}">Comment content</p>
-                    <small class="text-muted" th:text="${#temporals.format(comment.getCreatedAt(), 'yyyy-MM-dd HH:mm')}">Comment Date</small>
-                    <div th:if="${comment.nickname == loggedInNickname}">
-                      <button type="button" class="edit-comment"  th:data-board-id="${content.id}" th:data-comment-id="${comment.getId()}" th:data-comment-text="${comment.getComment()}" >수정</button>
-                    </div>
-                </div>
-                  <div th:if="${comment.hasChildren==true}" class="media-body ml-auto">
-                      <div th:each="childComment : ${comment.children}">
+                  <div th:if="${comment.hasChildren==true}" class="media-body">
+                      <h5 class="mt-0" th:text="${comment.getNickname()}">User Name</h5>
+                      <p th:if="${comment.isPrivate==true} and ${comment.nickname !=nickName}" th:text="비밀댓글입니다" th:id="'comment-' + ${comment.getId()}">Comment content</p>
+                      <p th:if="${comment.isPrivate==true} and ${comment.nickname ==nickName}" th:text="${comment.getComment()}" th:id="'comment-' + ${comment.getId()}">Comment content</p>
+                      <p th:unless="${comment.isPrivate==true}" th:text="${comment.getComment()}" th:id="'comment-' + ${comment.getId()}">Comment content</p>
+                      <small class="text-muted" th:text="${#temporals.format(comment.getCreatedAt(), 'yyyy-MM-dd HH:mm')}">Comment Date</small>
+                      <div th:if="${comment.nickname == nickName}">
+                          <button type="button" class="edit-comment"  th:data-board-id="${content.id}" th:data-comment-id="${childComment.getId()}" th:data-comment-text="${childComment.getComment()}" >수정</button>
+                      </div>
+                      <div th:each="childComment : ${comment.children}" class="media-body ml-auto">
                           <h5 class="mt-0" th:text="${comment.getNickname()}">User Name</h5>
-                          <p th:text="${comment.getComment()}" th:id="'comment-' + ${comment.getId()}">Comment content</p>
+                          <p th:if="${childComment.isPrivate==true} and ${childComment.nickname !=nickName}" th:text="비밀댓글입니다" th:id="'comment-' + ${comment.getId()}">Comment content</p>
+                          <p th:if="${childComment.isPrivate==true} and ${childComment.nickname ==nickName}" th:text="${childComment.getComment()}" th:id="'comment-' + ${comment.getId()}">Comment content</p>
+                          <p th:unless="${childComment.isPrivate==true}" th:text="${childComment.getComment()}" th:id="'comment-' + ${childComment.getId()}">Comment content</p>
                           <small class="text-muted" th:text="${#temporals.format(comment.getCreatedAt(), 'yyyy-MM-dd HH:mm')}">Comment Date</small>
-                          <div th:if="${comment.nickname == loggedInNickname}">
-                              <button type="button" class="edit-comment"  th:data-board-id="${content.id}" th:data-comment-id="${comment.getId()}" th:data-comment-text="${comment.getComment()}" >수정</button>
+                          <div th:if="${childComment.nickname == nickName}">
+                              <button type="button" class="edit-comment"  th:data-board-id="${content.id}" th:data-comment-id="${childComment.getId()}" th:data-comment-text="${childComment.getComment()}" >수정</button>
                           </div>
                       </div>
-                      <form method="post">
+                      <form method="post" class="media-body ml-auto">
                           <input type="hidden" name="parentId" th:value="${comment.id}">
                           <textarea name="comment" class="comment"></textarea>
                           <div>
@@ -59,6 +61,14 @@
                       </form>
                   </div>
                   <div th:if="${comment.hasChildren==false}" class="media-body">
+                      <h5 class="mt-0" th:text="${comment.getNickname()}">User Name</h5>
+                      <p th:if="${comment.isPrivate==true} and ${comment.nickname !=nickName}" th:text="비밀댓글입니다" th:id="'comment-' + ${comment.getId()}">Comment content</p>
+                      <p th:if="${comment.isPrivate==true} and ${comment.nickname ==nickName}" th:text="${comment.getComment()}" th:id="'comment-' + ${comment.getId()}">Comment content</p>
+                      <p th:unless="${comment.isPrivate==true}" th:text="${comment.getComment()}" th:id="'comment-' + ${comment.getId()}">Comment content</p>
+                      <small class="text-muted" th:text="${#temporals.format(comment.getCreatedAt(), 'yyyy-MM-dd HH:mm')}">Comment Date</small>
+                      <div th:if="${comment.nickname == nickName}">
+                          <button type="button" class="edit-comment"  th:data-board-id="${content.id}" th:data-comment-id="${comment.getId()}" th:data-comment-text="${comment.getComment()}" >수정</button>
+                      </div>
                       <form method="post">
                           <input type="hidden" name="parentId" th:value="${comment.id}">
                           <textarea name="comment" class="comment"></textarea>

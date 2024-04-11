@@ -107,6 +107,7 @@ public class ContentController {
         try{
             CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
             String nickname = principal.getNickname();
+            System.out.println("nickname = " + nickname);
             model.addAttribute("nickName",nickname);
         }catch (Exception e){
         }
