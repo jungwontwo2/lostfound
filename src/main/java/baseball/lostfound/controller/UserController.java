@@ -84,17 +84,20 @@ public class UserController {
     @GetMapping("/users/login")
     public String loginForm(@RequestParam(value = "error",required = false)String error,
                             @RequestParam(value = "exception",required = false)String exception,
-                            Model model,@ModelAttribute("user") LoginUserDto user) {
+                            Model model,@ModelAttribute("user") LoginUserDto user,HttpServletRequest request) {
         if(error!=null){
             model.addAttribute("error", error);
             model.addAttribute("exception", exception);
         }
+//        String uri = request.getHeader("Referer");
+//        request.getSession().setAttribute("prevPage", uri);
         return "users/login";
     }
     @PostMapping("/users/login")
     public String login(@Validated @ModelAttribute("user") LoginUserDto user,
                         BindingResult bindingResult,HttpServletRequest request,
                         Model model) {
+        System.out.println(request.getSession().getAttribute("prevPage").toString());
         if (bindingResult.hasErrors()) {
             return "users/login";
         }

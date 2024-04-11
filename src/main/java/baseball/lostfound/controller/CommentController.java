@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class CommentController {
     private final CommentService commentService;
 
-    @PostMapping("contents/{id}/comment")
+    @PostMapping("contents/comment/{id}")
     public String writeComment(@PathVariable Long id, CommentRequestDto commentRequestDto,
                                HttpServletRequest request, Authentication authentication){
         String parentId = request.getParameter("parentId");

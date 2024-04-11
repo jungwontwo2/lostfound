@@ -51,7 +51,7 @@
       </ul>
       <ul sec:authorize="isAnonymous()" class="navbar-nav">
         <li class="nav-item">
-          <button th:onclick="|location.href='@{/users/login}'|" class="nav-btn">로그인</button>
+          <button th:onclick="|location.href='@{/contents/write}'|" class="nav-btn">글쓰기</button>
         </li>
       </ul>
     </div>
@@ -150,7 +150,7 @@
             <a th:text="|${contentDto.position.getPositionName()} |" th:href="@{|/contents/${contentDto.id}|}"></a>
           </td>
           <td>
-            <img th:src="${contentDto.image.url}" alt="Image" width="100px" height="100px">
+            <img th:src="${contentDto.image.url}" alt="Image" width="200px" height="130px">
           </td>
         </tr>
         </tbody>

@@ -27,10 +27,10 @@ public class SecurityConfig {
     }
     @Bean//시큐리티 필터
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests((auth) -> auth.
-                requestMatchers("/", "/users/login", "/users/join","join/loginIdCheck","/join/nickNameCheck","/contents/**").permitAll()//해당 사이트면 모두 허용
+        http.authorizeHttpRequests((auth) -> auth
                 .requestMatchers("/admin").hasRole("ADMIN")//admin페이지에는 ADMIN이라는 Role을 가지고 있어야 가능
-                .requestMatchers("/users/my/**").hasAnyRole("ADMIN", "USER")//여기는 ADMIN이나 USER 둘중 아무거나 있으면 가능
+                .requestMatchers("/users/my/**","/contents/write","/contents/comment/**").hasAnyRole("ADMIN", "USER")//여기는 ADMIN이나 USER 둘중 아무거나 있으면 가능
+                .requestMatchers("/", "/users/login", "/users/join","join/loginIdCheck","/join/nickNameCheck","/contents/**").permitAll()//해당 사이트면 모두 허용
                 .anyRequest().authenticated()//나머지는 로그인 했으면 가능
         );
 
@@ -38,8 +38,10 @@ public class SecurityConfig {
                 .loginProcessingUrl("/users/login")//포스트 보내면 어디로 가는지
                 .usernameParameter("loginId")
                 .failureHandler(CustomAuthFailureHandler)
-                .defaultSuccessUrl("/",true)
+                .defaultSuccessUrl("/")
                 .permitAll());
+
+
         http.logout((logout)->logout.logoutRequestMatcher(new AntPathRequestMatcher("/users/logout"))
                 .logoutSuccessUrl("/")
                 .invalidateHttpSession(true));
