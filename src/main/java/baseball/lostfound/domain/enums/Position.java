@@ -11,4 +11,13 @@ public enum Position {
     public String getPositionName(){
         return positionName;
     }
+
+    public static Position ofDescription(String description) {
+        for (Position position : Position.values()) {
+            if (position.getPositionName().equals(description)) {
+                return position;
+            }
+        }
+        throw new IllegalArgumentException("해당하는 포지션 없음: " + description);
+    }
 }

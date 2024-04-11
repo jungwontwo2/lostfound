@@ -8,6 +8,8 @@ import baseball.lostfound.domain.dto.user.CustomUserDetails;
 import baseball.lostfound.domain.entity.Content;
 import baseball.lostfound.domain.entity.Image;
 import baseball.lostfound.domain.entity.User;
+import baseball.lostfound.domain.enums.Position;
+import baseball.lostfound.domain.enums.Team;
 import baseball.lostfound.repository.ContentRepository;
 import baseball.lostfound.repository.ImageRepository;
 import com.amazonaws.services.s3.AmazonS3;
@@ -79,14 +81,31 @@ public class ContentService {
         return contentResponseDto;
     }
 
-    public Page<ContentPagingDto>  paging(Pageable pageable, String criteria) {
+    public Page<ContentPagingDto>  paging(Pageable pageable, Team team, Position position) {
         int page=pageable.getPageNumber()-1;//page위치에 있는 값은 0부터 시작한다.
         int pageLimit = 8;//한페이지에 보여줄 글 개수
-        //System.out.println("zz");
-        PageRequest pageRequest = PageRequest.of(page, pageLimit, Sort.by(Sort.Order.desc("isImportant"), Sort.Order.desc(criteria),Sort.Order.desc("id")));
-        Page<Content> contents = contentRepository.findAllWithNickname(pageRequest);
-        Page<ContentPagingDto> contentsDto = contents.map(content -> new ContentPagingDto(content));
-        return contentsDto;
+        PageRequest pageRequest = PageRequest.of(page, pageLimit, Sort.by(Sort.Order.desc("isImportant"), Sort.Order.desc("id")));
+
+        if(team!=null & position!=null){
+            Page<Content> contents = contentRepository.findAllWithNickname(pageRequest,team,position);
+            Page<ContentPagingDto> contentsDto = contents.map(content -> new ContentPagingDto(content));
+            return contentsDto;
+        }
+        else if(position==null){
+            Page<Content> contents = contentRepository.findAllWithNicknameByTeam(pageRequest,team);
+            Page<ContentPagingDto> contentsDto = contents.map(content -> new ContentPagingDto(content));
+            return contentsDto;
+        }
+        else{
+            Page<Content> contents = contentRepository.findAllWithNicknameByPosition(pageRequest,position);
+            Page<ContentPagingDto> contentsDto = contents.map(content -> new ContentPagingDto(content));
+            return contentsDto;
+        }
+
+////        Page<Content> contents = contentRepository.findAllWithNickname(pageRequest);
+//        Page<Content> contents = contentRepository.findAllWithNickname(pageRequest,team,position);
+//        Page<ContentPagingDto> contentsDto = contents.map(content -> new ContentPagingDto(content));
+//        return contentsDto;
     }
 
     public Page<ContentPagingDto> getBoardListBySearchword(Pageable pageable, String searchWord) {

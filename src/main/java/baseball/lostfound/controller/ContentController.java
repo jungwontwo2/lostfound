@@ -35,20 +35,21 @@ public class ContentController {
 
     @GetMapping("/contents")
     public String home(@PageableDefault(page = 1) Pageable pageable,
-                       @RequestParam(name = "team",required = false)String team,
+                       @RequestParam(name = "team",required = false)Team team,
                        @RequestParam(name = "position",required = false)String position,
                        @RequestParam(name = "searchWord",required = false)String searchWord,
-                       @RequestParam(value = "orderby",required = false,defaultValue = "id") String orderCriteria,
                        Model model){
         model.addAttribute("team",team);
         model.addAttribute("position",position);
+        Position positionValue= null;
         if(searchWord==null){
-            Page<ContentPagingDto> contentDtos = contentService.paging(pageable,orderCriteria);
+            if (position != null && !position.isEmpty()) {
+                positionValue = Position.ofDescription(position);
+            }
+            Page<ContentPagingDto> contentDtos = contentService.paging(pageable,team,positionValue);
             int blockLimit = 5;
             int startPage = (((int) Math.ceil(((double) pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;
             int endPage = Math.min((startPage + blockLimit - 1), contentDtos.getTotalPages());
-
-
 
             model.addAttribute("contentDtos", contentDtos);
             model.addAttribute("startPage", startPage);
@@ -79,10 +80,10 @@ public class ContentController {
                                BindingResult bindingResult,
                                Authentication authentication,Model model) throws IOException {
         if(bindingResult.hasErrors()){
-            StringBuilder errorMessage = new StringBuilder("제목, 내용, 팀, 위치를 올바르게 입력해주세요.\n");
+            String errorMessage ="제목, 내용, 팀, 위치를 올바르게 입력해주세요.\n";
             model.addAttribute("teams", Team.values());
             model.addAttribute("positions", Position.values());
-            model.addAttribute("errorMessage",errorMessage.toString());
+            model.addAttribute("errorMessage",errorMessage);
             return "content/write-page";
         }
         CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
