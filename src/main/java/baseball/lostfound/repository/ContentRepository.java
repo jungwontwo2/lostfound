@@ -14,16 +14,19 @@ import java.util.List;
 public interface ContentRepository extends JpaRepository<Content,Long> {
     //@Query(value = "SELECT c FROM Content c WHERE c.title LIKE %:searchword% ORDER BY c.isImportant DESC, c.id DESC")
 
-    @Query(value = "SELECT c FROM Content c join fetch c.user WHERE c.title LIKE %:searchword% ORDER BY c.isImportant DESC, c.id DESC")
+    @Query("select c from Content c join fetch c.images")
+    Page<Content> findAll(Pageable pageable);
+
+    @Query(value = "SELECT c FROM Content c WHERE c.title LIKE %:searchword% ORDER BY c.isImportant DESC, c.id DESC")
     Page<Content> findByTitleContainingOrderByIsImportantDescAndContentIdDesc(Pageable pageable, @Param("searchword") String searchwordWithWildcards);
 
-    @Query("select c from Content c join fetch c.user where c.team = :team and c.position = :position ")
+    @Query("select c from Content c join fetch c.images where c.team = :team and c.position = :position ")
     Page<Content> findAllWithNickname(Pageable pageable, @Param("team") Team team, @Param("position") Position position);
 
-    @Query("select c from Content c join fetch c.user where c.team = :team ")
+    @Query("select c from Content c join fetch c.images where c.team = :team ")
     Page<Content> findAllWithNicknameByTeam(Pageable pageable, @Param("team") Team team);
 
-    @Query("select c from Content c join fetch c.user where c.position = :position ")
+    @Query("select c from Content c join fetch c.images where c.position = :position ")
     Page<Content> findAllWithNicknameByPosition(Pageable pageable, @Param("position") Position position);
 
     @Query("select c from Content c join fetch c.images where c.id=:id")

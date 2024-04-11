@@ -7,6 +7,7 @@ import baseball.lostfound.domain.dto.content.ContentResponseDto;
 import baseball.lostfound.domain.dto.content.ContentWriteDto;
 import baseball.lostfound.domain.dto.user.CustomUserDetails;
 import baseball.lostfound.domain.entity.Content;
+import baseball.lostfound.domain.entity.Image;
 import baseball.lostfound.domain.entity.User;
 import baseball.lostfound.domain.enums.Position;
 import baseball.lostfound.domain.enums.Team;
@@ -79,6 +80,13 @@ public class ContentController {
     public String writeContent(@Validated @ModelAttribute("content")ContentWriteDto contentWriteDto,
                                BindingResult bindingResult,
                                Authentication authentication,Model model) throws IOException {
+        if (!contentWriteDto.isValidImages()) {
+            String errorMessage ="적어도 하나의 이미지를 업로드해야 합니다.";
+            model.addAttribute("teams", Team.values());
+            model.addAttribute("positions", Position.values());
+            model.addAttribute("errorMessage",errorMessage);
+            return "content/write-page";
+        }
         if(bindingResult.hasErrors()){
             String errorMessage ="제목, 내용, 팀, 위치를 올바르게 입력해주세요.\n";
             model.addAttribute("teams", Team.values());

@@ -6,6 +6,7 @@ import baseball.lostfound.domain.entity.Image;
 import baseball.lostfound.domain.enums.Position;
 import baseball.lostfound.domain.enums.Team;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,6 +25,7 @@ public class ContentWriteDto {
     private Team team;
     @NotNull(message = "위치를 선택해주세요.")
     private Position position;
+    @NotNull
     private List<MultipartFile> images;
     public static Content toEntity(ContentWriteDto contentWriteDto, CustomUserDetails user){
         Content content = Content.builder()
@@ -36,5 +38,11 @@ public class ContentWriteDto {
                 .isImportant(false)
                 .build();
         return content;
+    }
+    public boolean isValidImages() {
+        if (images == null || images.isEmpty()) {
+            return false;
+        }
+        return images.stream().anyMatch(image -> !image.isEmpty());
     }
 }

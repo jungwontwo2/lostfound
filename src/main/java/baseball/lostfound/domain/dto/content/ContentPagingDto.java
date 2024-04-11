@@ -1,10 +1,13 @@
 package baseball.lostfound.domain.dto.content;
 
 import baseball.lostfound.domain.entity.Content;
+import baseball.lostfound.domain.entity.Image;
 import baseball.lostfound.domain.enums.Position;
 import baseball.lostfound.domain.enums.Team;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -17,6 +20,7 @@ public class ContentPagingDto {
     private Position position;
     private boolean isImportant;
     private Integer commentCnt;
+    private Image image;
 
     public ContentPagingDto(Content content){
         id=content.getId();
@@ -26,5 +30,6 @@ public class ContentPagingDto {
         position=content.getPosition();
         isImportant=content.isImportant();
         commentCnt=content.getCommentCnt();
+        image=content.getImages().getFirst();
     }
 }

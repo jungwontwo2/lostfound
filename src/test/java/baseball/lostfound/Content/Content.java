@@ -42,7 +42,7 @@ public class Content {
     public void writeContentNoImage() throws IOException {
         User user = userRepository.findByLoginId("qwer").orElse(null);
         CustomUserDetails customUserDetails = new CustomUserDetails(user);
-        ContentWriteDto contentWriteDto = new ContentWriteDto("aaa", "aaaa", Team.한화, Position.FIRST_BASE, null,false);
+        ContentWriteDto contentWriteDto = new ContentWriteDto("aaa", "aaaa", Team.한화, Position.FIRST_BASE, null);
         Long content = contentService.writeContent(contentWriteDto, customUserDetails);
         baseball.lostfound.domain.entity.Content findContent = contentRepository.findById(content).orElse(null);
         Assertions.assertThat(findContent.getTitle()).isEqualTo("aaa");
@@ -91,7 +91,7 @@ public class Content {
     public void deleteContent() throws IOException {
         User findUser = userRepository.findByLoginId("qwer").orElse(null);
         CustomUserDetails customUserDetails = new CustomUserDetails(findUser);
-        ContentWriteDto contentWriteDto = new ContentWriteDto("aaa", "aaaa", Team.한화, Position.FIRST_BASE, null,false);
+        ContentWriteDto contentWriteDto = new ContentWriteDto("aaa", "aaaa", Team.한화, Position.FIRST_BASE, null);
         Long content = contentService.writeContent(contentWriteDto, customUserDetails);
         baseball.lostfound.domain.entity.Content findContent = contentRepository.findById(content).orElse(null);
         contentService.deleteContent(findContent.getId(),customUserDetails.getUserEntity());
