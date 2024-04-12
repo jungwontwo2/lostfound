@@ -95,9 +95,7 @@ public class UserController {
     }
     @PostMapping("/users/login")
     public String login(@Validated @ModelAttribute("user") LoginUserDto user,
-                        BindingResult bindingResult,HttpServletRequest request,
-                        Model model) {
-        System.out.println(request.getSession().getAttribute("prevPage").toString());
+                        BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "users/login";
         }

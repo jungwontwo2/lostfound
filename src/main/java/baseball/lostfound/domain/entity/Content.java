@@ -1,5 +1,7 @@
 package baseball.lostfound.domain.entity;
 
+import baseball.lostfound.domain.dto.content.ContentEditDto;
+import baseball.lostfound.domain.dto.content.ContentResponseDto;
 import baseball.lostfound.domain.enums.Position;
 import baseball.lostfound.domain.enums.Team;
 import jakarta.persistence.*;
@@ -41,4 +43,12 @@ public class Content {
 
     private boolean isImportant;
     public void addCommentCnt(){this.commentCnt=this.commentCnt+1;}
+
+    public static ContentEditDto toEditDto(ContentResponseDto content){
+        ContentEditDto contentEditDto = ContentEditDto.builder()
+                .title(content.getTitle())
+                .texts(content.getTexts())
+                .build();
+        return contentEditDto;
+    }
 }

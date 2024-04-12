@@ -2,6 +2,7 @@ package baseball.lostfound.controller;
 
 import baseball.lostfound.domain.dto.comment.CommentRequestDto;
 import baseball.lostfound.domain.dto.comment.CommentResponseDto;
+import baseball.lostfound.domain.dto.content.ContentEditDto;
 import baseball.lostfound.domain.dto.content.ContentPagingDto;
 import baseball.lostfound.domain.dto.content.ContentResponseDto;
 import baseball.lostfound.domain.dto.content.ContentWriteDto;
@@ -13,6 +14,7 @@ import baseball.lostfound.domain.enums.Position;
 import baseball.lostfound.domain.enums.Team;
 import baseball.lostfound.service.CommentService;
 import baseball.lostfound.service.ContentService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -114,5 +116,31 @@ public class ContentController {
         model.addAttribute("content",contentDto);
         model.addAttribute("comments",commentResponseDtos);
         return "content/content-page";
+    }
+
+
+//    @PostMapping("/boards/free/edit/{id}")
+//    public String editConent(@PathVariable Long id,@ModelAttribute("content")ContentEditDto contentEditDto){
+//        contentService.editContent(id,contentEditDto);
+//        return "redirect:/boards/free/"+id;
+//    }
+
+    //글 수정페이지 가져오기
+    @PostMapping("/contents/editPage/{id}")
+    public String editContent(@PathVariable Long id, @ModelAttribute("content") ContentEditDto contentEditDto
+            , HttpServletRequest request,Authentication authentication){
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+        ContentResponseDto content = contentService.getContent(id);
+        if(!content.getWriter().equals(customUserDetails.getNickname())){
+            request.setAttribute("msg", "글을 작성한 사용자가 아닙니다.");
+            String redirectUrl = "/boards/free/"+id.toString();
+            request.setAttribute("redirectUrl",redirectUrl);
+            return "common/messageRedirect";
+        }
+        ContentEditDto contentEditDto1 = Content.toEditDto(content);
+        contentEditDto.setTitle(contentEditDto1.getTitle());
+        contentEditDto.setTexts(contentEditDto1.getTexts());
+        //contentService.editContent(id, contentEditDto);
+        return "content/edit-page";
     }
 }

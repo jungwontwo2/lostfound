@@ -38,7 +38,7 @@
                       <p th:unless="${comment.isPrivate==true}" th:text="${comment.getComment()}" th:id="'comment-' + ${comment.getId()}">Comment content</p>
                       <small class="text-muted" th:text="${#temporals.format(comment.getCreatedAt(), 'yyyy-MM-dd HH:mm')}">Comment Date</small>
                       <div th:if="${comment.nickname == nickName}">
-                          <button type="button" class="edit-comment"  th:data-board-id="${content.id}" th:data-comment-id="${childComment.getId()}" th:data-comment-text="${childComment.getComment()}" >수정</button>
+                          <button type="button" class="edit-comment"  th:data-board-id="${content.id}" th:data-comment-id="${comment.getId()}" th:data-comment-text="${comment.getComment()}" >수정</button>
                       </div>
                       <div th:each="childComment : ${comment.children}" class="media-body ml-auto">
                           <h5 class="mt-0" th:text="${comment.getNickname()}">User Name</h5>
@@ -98,12 +98,14 @@
             </div>
           </div>
         </form>
+          <form method="post">
+              <div class="select-btn">
+                  <button th:formaction="@{|/contents/editPage/${content.id}|}">수정</button>
+                  <button th:formaction="@{|/contents/delete/${content.id}|}">삭제</button>
+                  <button type="button" th:onclick="|location.href='@{/contents}'|">뒤로가기</button>
+              </div>
+          </form>
       </div>
-        <div class="select-btn">
-          <button th:formaction="@{|/contents/editPage/${content.id}|}">수정</button>
-          <button th:formaction="@{|/contents/delete/${content.id}|}">삭제</button>
-          <button type="button" th:onclick="|location.href='@{/contents}'|">뒤로가기</button>
-        </div>
     </form>
     </div>
   </div>
