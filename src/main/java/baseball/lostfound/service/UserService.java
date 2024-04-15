@@ -8,6 +8,10 @@ import baseball.lostfound.domain.error.CustomException;
 import baseball.lostfound.domain.error.ErrorCode;
 import baseball.lostfound.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,6 +60,18 @@ public class UserService {
         Optional<User> optionalUser = userRepository.findByLoginId(userDto.getLoginId());
         User updateUser = optionalUser.get();
         updateUser.updateNickname(userDto.getNickname());
+        updateAuthenticationInSession(userDto.getNickname());
         return updateUser;
+    }
+
+    private void updateAuthenticationInSession(String nickname) {
+        Authentication currentAuth = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails principal = (UserDetails) currentAuth.getPrincipal();
+        //System.out.println("principal.getUsername() = " + principal.getUsername());
+        if (principal.getUsername().equals(nickname)) {
+            UserDetails userDetails = userRepository.findByNickname(nickname);
+            Authentication newAuth = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(newAuth);
+        }
     }
 }

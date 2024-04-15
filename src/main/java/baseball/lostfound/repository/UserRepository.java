@@ -20,6 +20,6 @@ public interface UserRepository extends JpaRepository<User,Long> {
 //    @Query("select u from User u join fetch u.image where u.loginId=:loginId")
 //    User findImageByLoginId(@Param("loginId") String loginId);
 //
-//    UserDetails findByNickname(String nickname);
+    UserDetails findByNickname(String nickname);
 //    Optional<User> findByPassword(String password);
 }
