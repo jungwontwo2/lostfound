@@ -37,13 +37,7 @@
       <!-- admin 일때 -->
       <ul sec:authorize="hasRole('ROLE_ADMIN')" class="navbar-nav">
         <li class="nav-item">
-          <button class="nav-btn" onclick="location.href = '/admin'">관리자</button>
-        </li>
-        <li class="nav-item">
           <button class="nav-btn" onclick="location.href = '/users/my'">내 정보</button>
-        </li>
-        <li class="nav-item">
-          <button th:onclick="|location.href='@{/admin/content/write}'|" class="nav-btn">공지사항 쓰기</button>
         </li>
         <li class="nav-item">
           <button th:onclick="|location.href='@{/contents/write}'|" class="nav-btn">글쓰기</button>
@@ -55,13 +49,13 @@
         <!-- user 일때 -->
       <ul sec:authorize="hasRole('ROLE_USER')" class="navbar-nav">
         <li class="nav-item">
+          <button class="nav-btn" onclick="location.href = '/users/my'">내 정보</button>
+        </li>
+        <li class="nav-item">
           <button th:onclick="|location.href='@{/contents/write}'|" class="nav-btn">글쓰기</button>
         </li>
         <li class="nav-item">
           <button class="nav-btn" onclick="location.href = '/users/logout'">로그아웃</button>
-        </li>
-        <li class="nav-item">
-          <button class="nav-btn" onclick="location.href = '/users/my'">내 정보</button>
         </li>
       </ul>
       <ul sec:authorize="isAnonymous()" class="navbar-nav">

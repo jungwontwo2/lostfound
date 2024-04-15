@@ -32,9 +32,9 @@
         </div>
         <br/><br/>
       <div style="font-weight: bold;">위치</div>
-        <div th:each="position : ${positions}" class="position-container">
-          <input type="radio" th:id="${'position_' + position}" th:name="position" th:value="${position}" />
-          <label th:for="${'position_' + position}" th:text="${position}">Position</label>
+        <div th:each="pos : ${positions}" class="position-container">
+          <input type="radio" th:id="${'position_' + pos}" th:name="position" th:value="${position}" />
+          <label th:for="${'position_' + pos}" th:text="${pos.positionName}">Position</label>
         </div>
         <br/><br/>
         <label for="texts" style="font-weight: bold;" >글 내용</label>
@@ -45,6 +45,7 @@
         <label for="files">이미지</label>
       </div>
       <button type="submit">글 쓰기</button>
+      <button type="button" th:onclick="|location.href='@{/contents}'|">뒤로가기</button>
     </form>
   </div>
 </div>
