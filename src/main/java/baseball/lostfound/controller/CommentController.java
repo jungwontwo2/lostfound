@@ -8,6 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
@@ -21,5 +22,13 @@ public class CommentController {
         System.out.println("parentId = " + parentId);
         commentService.writeComment(commentRequestDto,id,request.getParameter("parentId"),authentication,commentRequestDto.getIsPrivate());
         return "redirect:/contents/"+id;
+    }
+
+    @PostMapping("/comment/update/{id}")
+    public String updateComment(@PathVariable Long id,
+                                @RequestParam("text") String updatedComment,
+                                @RequestParam("boardId") Long boardId){
+        commentService.updateComment(updatedComment,id);
+        return "redirect:/boards/free/"+boardId;
     }
 }

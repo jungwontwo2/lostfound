@@ -65,9 +65,9 @@ public class CommentService {
         commentRepository.delete(comment);
     }
     @Transactional
-    public Long updateComment(CommentRequestDto commentRequestDto,Long commentId){
+    public Long updateComment(String updatedComment,Long commentId){
         Comment comment = commentRepository.findById(commentId).orElse(null);
-        comment.update(commentRequestDto.getComment());
+        comment.update(updatedComment);
         commentRepository.save(comment);
         return comment.getId();
     }

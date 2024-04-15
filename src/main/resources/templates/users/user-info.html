@@ -19,26 +19,33 @@
   <div id="board-search">
     <div class="container">
       <div class="search-window">
-        <h3 th:text="|안녕하세요 ${nickname}님!|"> 내가 쓴 게시글 </h3>
+        <h3 th:text="|안녕하세요 ${nickname}님이 쓴 게시물입니다!|"> 내가 쓴 게시글 </h3>
       </div>
-        <img class="user-image" th:src="${image.getUrl()}" alt="User image" width="50" height="300">
-      <table class="board-table my">
+      <table class="board-table">
         <thead>
         <tr>
           <th scope="col" class="th-num">번호</th>
           <th scope="col" class="th-title">제목</th>
           <th scope="col" class="th-date">작성자</th>
+          <th scope="col" class="th-image">사진</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="contentDto: ${contentDtos}">
           <td>
-            <a th:text="${contentDto.id}" th:href="@{|/contents/free/${contentDto.id}|}"></a>
+            <a th:text="${contentDto.id}" th:href="@{|/contents/${contentDto.id}|}"></a>
           </td>
           <td>
-            <a th:text="${contentDto.title}" th:href="@{|/contents/free/${contentDto.id}|}"></a>
+            <a th:text="${contentDto.title}" th:href="@{|/contents/${contentDto.id}|}"></a>
           </td>
-          <td th:text="${contentDto.writer}"></td>
+          <td>
+            <a th:text="${contentDto.writer}" th:href="@{|/contents/${contentDto.id}|}"></a>
+          </td>
+          <td>
+            <a th:href="@{|/contents/${contentDto.id}|}">
+              <img th:src="${contentDto.image.url}" alt="Image" width="200px" height="130px">
+            </a>
+          </td>
         </tr>
         </tbody>
       </table>
@@ -69,7 +76,6 @@
     </div>
     </div>
     <div class="edit-btn">
-      <button class="btn btn-dark edit" th:onclick="|location.href='@{/users/my/edit/image}'|">사진 수정</button>
       <button class="btn btn-dark edit" th:onclick="|location.href='@{/users/my/edit/info}'|">정보 수정</button>
       <button class="btn btn-dark edit" th:onclick="|location.href='@{/}'|">홈으로</button>
     </div>

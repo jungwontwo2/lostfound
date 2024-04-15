@@ -99,9 +99,12 @@
           </div>
         </form>
           <form method="post">
-              <div class="select-btn">
+              <div th:if="${nickName==content.writer}"class="select-btn">
                   <button th:formaction="@{|/contents/editPage/${content.id}|}">수정</button>
                   <button th:formaction="@{|/contents/delete/${content.id}|}">삭제</button>
+                  <button type="button" th:onclick="|location.href='@{/contents}'|">뒤로가기</button>
+              </div>
+              <div th:unless="${nickName==content.writer}"class="select-btn">
                   <button type="button" th:onclick="|location.href='@{/contents}'|">뒤로가기</button>
               </div>
           </form>

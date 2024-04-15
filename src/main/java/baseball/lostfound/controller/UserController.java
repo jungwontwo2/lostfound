@@ -2,22 +2,27 @@ package baseball.lostfound.controller;
 
 import baseball.lostfound.domain.dto.ResponseDto;
 import baseball.lostfound.domain.dto.content.ContentPagingDto;
-import baseball.lostfound.domain.dto.user.JoinUserDto;
-import baseball.lostfound.domain.dto.user.LoginUserDto;
+import baseball.lostfound.domain.dto.user.*;
+import baseball.lostfound.domain.entity.Image;
 import baseball.lostfound.domain.entity.User;
 import baseball.lostfound.service.ContentService;
 import baseball.lostfound.service.LoginService;
 import baseball.lostfound.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Collection;
 
 @Controller
 @RequiredArgsConstructor
@@ -28,7 +33,7 @@ public class UserController {
     private final UserService userService;
     @GetMapping("/")
     public String home(){
-        return "home/home";
+        return "redirect:/contents";
     }
     @GetMapping("/users/join")
     public String addUserForm(@ModelAttribute("user") JoinUserDto user) {
@@ -46,7 +51,7 @@ public class UserController {
             return "users/addMemberForm";
         }
         userService.saveUser(user,"ROLE_USER");
-        return "redirect:/";
+        return "redirect:/contents";
     }
     @RequestMapping(value = "/join/loginIdCheck")
     public @ResponseBody ResponseDto<?> check(@RequestBody(required = false) String loginId)  {
@@ -104,10 +109,63 @@ public class UserController {
             bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
             return "users/login";
         }
-        return "redirect:/";
+        return "redirect:/contents";
     }
     @GetMapping("/users/logout")
     public String logout(){
-        return "redirect:/";
+        return "redirect:/contents";
+    }
+
+    @GetMapping("users/my")
+    public String myInfo(@PageableDefault(page = 1) Pageable pageable,HttpServletRequest request,
+                         Authentication authentication,
+                         Model model){
+        HttpSession session = request.getSession(false);
+        if(session==null){
+            request.setAttribute("msg","로그인 후 사용 가능합니다.");
+            request.setAttribute("redirectUrl","/users/login");
+            return "common/messageRedirect";
+        }
+        CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
+        EditUserDto member = userService.findMember(user.getUsername());
+        String loginId = authentication.getName();
+        Page<ContentPagingDto> contentDtos = contentService.pagingByLoginId(pageable, loginId);
+        int blockLimit = 3;
+        int startPage = (((int) Math.ceil(((double) pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;
+        int endPage = Math.min((startPage + blockLimit - 1), contentDtos.getTotalPages());
+        model.addAttribute("user",user);
+        model.addAttribute("nickname",member.getNickname());
+        model.addAttribute("contentDtos", contentDtos);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        return "users/user-info";
+    }
+
+    @GetMapping("/users/my/edit/info")
+    public String getEditUserInfo(Authentication authentication,Model model)
+    {
+        CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
+        EditUserDto userDto = userService.findMember(user.getUsername());
+        model.addAttribute("user", userDto);
+        return "users/user-info-edit";
+    }
+    @PostMapping("/users/my/edit/info")
+    public String postEditUserInfo(HttpServletRequest request,
+                                   @Validated @ModelAttribute("user") UserNicknameUpdateDto userNicknameUpdateDto,
+                                   BindingResult bindingResult, Model model,Authentication authentication)
+    {
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        HttpSession session = request.getSession(false);
+        if(session==null){
+            request.setAttribute("msg","로그인 후 사용 가능합니다.");
+            request.setAttribute("redirectUrl","/users/login");
+            return "common/messageRedirect";
+        }
+        boolean checkNicknameDuplication = userService.checkNicknameDuplication(userNicknameUpdateDto.getNickname());
+        if(checkNicknameDuplication){
+            bindingResult.rejectValue("nickname","nicknameDuplicate","존재하는 닉네임입니다");
+        }
+        userService.updateUserNickname(userNicknameUpdateDto);
+        return "redirect:/users/my";
     }
 }

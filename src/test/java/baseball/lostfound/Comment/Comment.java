@@ -73,7 +73,7 @@ public class Comment {
         CustomUserDetails customUserDetails = new CustomUserDetails(user);
         Authentication authentication = mock(Authentication.class);
         when(authentication.getPrincipal()).thenReturn(customUserDetails);
-        ContentWriteDto contentWriteDto = new ContentWriteDto("aaa", "aaaa", Team.한화, Position.FIRST_BASE, null,false);
+        ContentWriteDto contentWriteDto = new ContentWriteDto("aaa", "aaaa", Team.한화, Position.FIRST_BASE, null);
         Long contentId = contentService.writeContent(contentWriteDto, customUserDetails);
         Long commentId = commentService.writeComment(new CommentRequestDto("한화 오늘 이기자!!",false), contentId, null, authentication,true);
         baseball.lostfound.domain.entity.Comment comment = commentRepository.findById(commentId).orElse(null);
@@ -88,7 +88,7 @@ public class Comment {
         CustomUserDetails customUserDetails = new CustomUserDetails(user);
         Authentication authentication = mock(Authentication.class);
         when(authentication.getPrincipal()).thenReturn(customUserDetails);
-        ContentWriteDto contentWriteDto = new ContentWriteDto("aaa", "aaaa", Team.한화, Position.FIRST_BASE, null,false);
+        ContentWriteDto contentWriteDto = new ContentWriteDto("aaa", "aaaa", Team.한화, Position.FIRST_BASE, null);
         Long contentId = contentService.writeContent(contentWriteDto, customUserDetails);
         Long commentId = commentService.writeComment(new CommentRequestDto("한화 오늘 이기자!!",false), contentId, null, authentication,true);
         commentService.deleteComment(commentId);
@@ -103,12 +103,12 @@ public class Comment {
         CustomUserDetails customUserDetails = new CustomUserDetails(user);
         Authentication authentication = mock(Authentication.class);
         when(authentication.getPrincipal()).thenReturn(customUserDetails);
-        ContentWriteDto contentWriteDto = new ContentWriteDto("aaa", "aaaa", Team.한화, Position.FIRST_BASE, null,false);
+        ContentWriteDto contentWriteDto = new ContentWriteDto("aaa", "aaaa", Team.한화, Position.FIRST_BASE, null);
         Long contentId = contentService.writeContent(contentWriteDto, customUserDetails);
         Long commentId = commentService.writeComment(new CommentRequestDto("한화 오늘 이기자!!",false), contentId, null, authentication,true);
         em.flush();
         em.clear();
-        commentService.updateComment(new CommentRequestDto("4월 9일 한화 이기자!!",false),commentId);
+        commentService.updateComment("4월 9일 한화 이기자!!",commentId);
         Assertions.assertThat(commentRepository.findById(commentId).orElse(null).getComment()).isEqualTo("4월 9일 한화 이기자!!");
     }
 }

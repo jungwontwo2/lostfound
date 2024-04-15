@@ -37,10 +37,19 @@
       <!-- admin 일때 -->
       <ul sec:authorize="hasRole('ROLE_ADMIN')" class="navbar-nav">
         <li class="nav-item">
+          <button class="nav-btn" onclick="location.href = '/admin'">관리자</button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-btn" onclick="location.href = '/users/my'">내 정보</button>
+        </li>
+        <li class="nav-item">
           <button th:onclick="|location.href='@{/admin/content/write}'|" class="nav-btn">공지사항 쓰기</button>
         </li>
         <li class="nav-item">
           <button th:onclick="|location.href='@{/contents/write}'|" class="nav-btn">글쓰기</button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-btn" onclick="location.href = '/users/logout'">로그아웃</button>
         </li>
       </ul>
         <!-- user 일때 -->
@@ -48,42 +57,22 @@
         <li class="nav-item">
           <button th:onclick="|location.href='@{/contents/write}'|" class="nav-btn">글쓰기</button>
         </li>
+        <li class="nav-item">
+          <button class="nav-btn" onclick="location.href = '/users/logout'">로그아웃</button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-btn" onclick="location.href = '/users/my'">내 정보</button>
+        </li>
       </ul>
       <ul sec:authorize="isAnonymous()" class="navbar-nav">
         <li class="nav-item">
-          <button th:onclick="|location.href='@{/contents/write}'|" class="nav-btn">글쓰기</button>
+          <button class=" nav-btn" th:onclick="location.href = '/users/login'">로그인</button>
         </li>
       </ul>
     </div>
   </div>
 </nav>
-<!--<section class="notice">-->
-<!--  <div class="page-title">-->
-<!--    <div class="container">-->
-<!--      <h3>자유게시판</h3>-->
-<!--    </div>-->
-<!--  </div>-->
 <div style="text-align: center; margin-bottom: 20px;" id="teamSelection">
-<!--  <a class="btn" data-team="한화"-->
-<!--     th:href="@{/boards?team=한화}">한화</a>-->
-<!--  <a class="btn" data-team="롯데"-->
-<!--     th:href="@{/boards?team=롯데}">롯데</a>-->
-<!--  <a class="btn" data-team="키움"-->
-<!--     th:href="@{/boards?team=키움}">키움</a>-->
-<!--  <a class="btn" data-team="삼성"-->
-<!--     th:href="@{/boards?team=삼성}">삼성</a>-->
-<!--  <a class="btn" data-team="두산"-->
-<!--     th:href="@{/boards?team=두산}">두산</a>-->
-<!--  <a class="btn" data-team="SSG"-->
-<!--     th:href="@{/boards?team=SSG}">SSG</a>-->
-<!--  <a class="btn" data-team="NC"-->
-<!--     th:href="@{/boards?team=NC}">NC</a>-->
-<!--  <a class="btn" data-team="LG"-->
-<!--     th:href="@{/boards?team=LG}">LG</a>-->
-<!--  <a class="btn" data-team="KIA"-->
-<!--     th:href="@{/boards?team=KIA}">KIA</a>-->
-<!--  <a class="btn" data-team="KT"-->
-<!--     th:href="@{/boards?team=KT}">KT</a>-->
   <a class="btn" data-team="두산">두산</a>
   <a class="btn" data-team="롯데">롯데</a>
   <a class="btn" data-team="삼성">삼성</a>
@@ -96,14 +85,6 @@
   <a class="btn" data-team="SSG">SSG</a>
 </div>
 <div style="text-align: center; margin-bottom: 20px;" id="positionSelection">
-<!--  <a class="btn" data-position="1루"-->
-<!--     th:href="@{|/boards?team=${team}&position=1루|}">1루</a>-->
-<!--  <a class="btn" data-position="3루"-->
-<!--     th:href="@{|/boards?team=${team}&position=3루|}">3루</a>-->
-<!--  <a class="btn" data-position="외야"-->
-<!--     th:href="@{|/boards?team=${team}&position=외야|}">외야</a>-->
-<!--  <a class="btn" data-position="기타"-->
-<!--     th:href="@{|/boards?team=${team}&position=기타|}">기타</a>-->
   <a class="btn" data-position="1루">1루</a>
   <a class="btn" data-position="3루">3루</a>
   <a class="btn" data-position="외야">외야</a>

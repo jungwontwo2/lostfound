@@ -30,4 +30,7 @@ public class User {
         this.nickname = nickname;
         this.role=role;
     }
+    public void updateNickname(String updatedNickName){
+        this.nickname=updatedNickName;
+    }
 }

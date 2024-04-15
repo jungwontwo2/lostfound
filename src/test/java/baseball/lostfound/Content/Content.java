@@ -76,7 +76,7 @@ public class Content {
         images.add(mockImage);
         images.add(mockImage2);
 
-        ContentWriteDto contentWriteDto = new ContentWriteDto("aaa", "aaaa", Team.한화, Position.FIRST_BASE, images,false);
+        ContentWriteDto contentWriteDto = new ContentWriteDto("aaa", "aaaa", Team.한화, Position.FIRST_BASE, images);
         Long contentId = contentService.writeContent(contentWriteDto, customUserDetails);
         em.clear();
         baseball.lostfound.domain.entity.Content content = contentRepository.findByIdWithImage(contentId);
