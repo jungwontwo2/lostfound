@@ -10,7 +10,7 @@
 
 게시글 입력 화면
 
-![image](https://github.com/jungwontwo2/lostfound/assets/65643842/f2b6b293-8d5d-4fec-98d7-eaac2db7ddb3)
+![image](https://github.com/jungwontwo2/lostfound/assets/65643842/0623e90e-d846-4324-9f9d-42cb0f78aad2)
 
 게시글 화면
 
