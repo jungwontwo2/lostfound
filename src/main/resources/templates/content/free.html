@@ -131,7 +131,9 @@
             <a th:text="|${contentDto.position.getPositionName()} |" th:href="@{|/contents/${contentDto.id}|}"></a>
           </td>
           <td>
-            <img th:src="${contentDto.image.url}" alt="Image" width="200px" height="130px">
+            <a th:href="@{|/contents/${contentDto.id}|}">
+              <img th:src="${contentDto.image.url}" alt="Image" width="200px" height="130px">
+            </a>
           </td>
         </tr>
         </tbody>
