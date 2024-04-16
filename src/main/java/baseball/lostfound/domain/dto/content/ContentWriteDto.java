@@ -26,7 +26,7 @@ public class ContentWriteDto {
     @NotNull(message = "위치를 선택해주세요.")
     private Position position;
     @NotNull
-    private List<MultipartFile> images;
+    private MultipartFile image;
     public static Content toEntity(ContentWriteDto contentWriteDto, CustomUserDetails user){
         Content content = Content.builder()
                 .title(contentWriteDto.getTitle())
@@ -40,9 +40,6 @@ public class ContentWriteDto {
         return content;
     }
     public boolean isValidImages() {
-        if (images == null || images.isEmpty()) {
-            return false;
-        }
-        return images.stream().anyMatch(image -> !image.isEmpty());
+        return image != null && !image.isEmpty();
     }
 }

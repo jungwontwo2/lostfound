@@ -30,6 +30,6 @@ public class ContentPagingDto {
         position=content.getPosition();
         isImportant=content.isImportant();
         commentCnt=content.getCommentCnt();
-        image=content.getImages().getFirst();
+        image=content.getImage();
     }
 }

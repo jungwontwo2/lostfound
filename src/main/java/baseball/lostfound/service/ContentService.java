@@ -1,5 +1,6 @@
 package baseball.lostfound.service;
 
+import baseball.lostfound.domain.dto.content.ContentEditDto;
 import baseball.lostfound.domain.dto.content.ContentPagingDto;
 import baseball.lostfound.domain.dto.content.ContentResponseDto;
 import baseball.lostfound.domain.dto.content.ContentWriteDto;
@@ -21,6 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -41,25 +43,20 @@ public class ContentService {
     private String bucket;
 
     public Long writeContent(ContentWriteDto contentDto, CustomUserDetails user) throws IOException {
-        if(contentDto.getImages()==null || contentDto.getImages().isEmpty()){
+        if(contentDto.getImage()==null || contentDto.getImage().isEmpty()){
             Content content = ContentWriteDto.toEntity(contentDto,user);
             contentRepository.save(content);
             return content.getId();
         }else {
             Content content = ContentWriteDto.toEntity(contentDto,user);
             contentRepository.save(content);
-            List<MultipartFile> images = contentDto.getImages();
-            for (MultipartFile image : images) {
-                if(image.isEmpty()){
-                    continue;
-                }
-                String saveImageUrl = saveImage(image);
-                Image buildImage = Image.builder()
-                        .url(saveImageUrl)
-                        .content(content)
-                        .build();
-                imageRepository.save(buildImage);
-            }
+            MultipartFile image = contentDto.getImage();
+            String saveImageUrl = saveImage(image);
+            Image buildImage = Image.builder()
+                    .url(saveImageUrl)
+                    .content(content)
+                    .build();
+            imageRepository.save(buildImage);
             return content.getId();
         }
     }
@@ -147,5 +144,25 @@ public class ContentService {
         Page<Content> contents = contentRepository.findByUserLoginId(PageRequest.of(page, pageLimit, Sort.Direction.DESC,"id"), loginId);
         Page<ContentPagingDto> contentDtos = contents.map(content -> new ContentPagingDto(content));
         return contentDtos;
+    }
+    @Transactional
+    public void editContent(Long id, ContentEditDto contentEditDto) throws IOException {
+        Optional<Content> byId = contentRepository.findById(id);
+        Content content = byId.get();
+        Image imageFindByContentId = imageRepository.findByContentId(content.getId());
+        imageRepository.delete(imageFindByContentId);
+        MultipartFile image = contentEditDto.getImage();
+        String saveImageUrl = saveImage(image);
+        Image buildImage = Image.builder()
+                .url(saveImageUrl)
+                .content(content)
+                .build();
+        imageRepository.save(buildImage);
+        content.updateTitle(contentEditDto.getTitle());
+        content.updateTexts(contentEditDto.getTexts());
+        content.updateImage(buildImage);
+        content.updateTeam(contentEditDto.getTeam());
+        content.updatePosition(contentEditDto.getPosition());
+        contentRepository.save(content);
     }
 }

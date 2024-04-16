@@ -33,7 +33,7 @@
         <br/><br/>
       <div style="font-weight: bold;">위치</div>
         <div th:each="pos : ${positions}" class="position-container">
-          <input type="radio" th:id="${'position_' + pos}" th:name="position" th:value="${position}" />
+          <input type="radio" th:id="${'position_' + pos}" th:name="position" th:value="${pos}" />
           <label th:for="${'position_' + pos}" th:text="${pos.positionName}">Position</label>
         </div>
         <br/><br/>
@@ -41,7 +41,7 @@
         <br/><br/>
         <div id="byteCounter">0 바이트</div>
         <textarea id="texts" name="texts" th:field="*{texts}" placeholder="0~500바이트 입력이 가능합니다."></textarea>
-        <input type="file" name="files" id="files" accept="image/*" th:field="*{images}" multiple>
+        <input type="file" name="files" id="files" accept="image/*" th:field="*{image}">
         <label for="files">이미지</label>
       </div>
       <button type="submit">글 쓰기</button>

@@ -16,13 +16,16 @@
       <div class="form-group" align="left">
         <div th:text="|작성자 : ${content.writer}|"></div>
         <div th:text="|제목: *{title}|"></div>
+          <br>
+          <div th:text="|팀: *{team}|"></div>
+          <div th:text="|위치: *{position.getPositionName()}|"></div>
         <br><br>
         <h3>내용</h3>
         <div class="texts" th:text="*{texts}"></div>
         <div style="text-align: center;">
-          <th:block th:each="image : ${content.images}">
-              <img th:src="${image.url}" alt="Image" width="400px" height="400px">
-          </th:block>
+<!--          <th:block th:each="image : ${content.images}">-->
+          <img th:src="${content.image.url}" alt="Image" width="400px" height="400px">
+<!--          </th:block>-->
         </div>
         <!-- Comments -->
         <br>
@@ -43,7 +46,7 @@
                       <div th:each="childComment : ${comment.children}" class="media-body ml-auto">
                           <h5 class="mt-0" th:text="${childComment.getNickname()}">User Name</h5>
                           <p th:if="${childComment.isPrivate==false}" th:text="${childComment.getComment()}" th:id="'comment-' + ${comment.getId()}">Comment content</p>
-                          <p th:if="${childComment.isPrivate==true} and ${childComment.nickname ==nickName} or ${childComment.isPrivate==true} and ${content.writer == nickName}" th:text="|비밀댓글입니다: ${childComment.getComment()}|" th:id="'comment-' + ${comment.getId()}">Comment content</p>
+                          <p th:if="${childComment.isPrivate==true} and ${childComment.nickname ==nickName} or ${childComment.isPrivate==true} and ${content.writer == nickName} or ${comment.nickname==nickName}" th:text="|비밀댓글입니다: ${childComment.getComment()}|" th:id="'comment-' + ${comment.getId()}">Comment content</p>
                           <p th:unless="${childComment.isPrivate==false} or ${childComment.nickname ==nickName} or ${content.writer == nickName}" th:text="비밀댓글입니다." th:id="'comment-' + ${comment.getId()}">Comment content</p>
                           <small class="text-muted" th:text="${#temporals.format(comment.getCreatedAt(), 'yyyy-MM-dd HH:mm')}">Comment Date</small>
                           <div th:if="${childComment.nickname == nickName}">
@@ -63,7 +66,7 @@
                   <div th:if="${comment.hasChildren==false}" class="media-body">
                       <h5 class="mt-0" th:text="${comment.nickname}">User Name</h5>
                       <p th:if="${comment.isPrivate==false}" th:text="${comment.getComment()}" th:id="'comment-' + ${comment.getId()}">Comment content</p>
-                      <p th:if="${comment.isPrivate==true} and ${comment.nickname ==nickName} or ${comment.isPrivate==true} and ${content.writer == nickName}" th:text="|비밀댓글입니다: ${comment.getComment()}|" th:id="'comment-' + ${comment.getId()}">Comment content</p>
+                      <p th:if="${comment.isPrivate==true} and ${comment.nickname ==nickName} or ${comment.isPrivate==true} and ${content.writer == nickName} " th:text="|비밀댓글입니다: ${comment.getComment()}|" th:id="'comment-' + ${comment.getId()}">Comment content</p>
                       <p th:unless="${comment.isPrivate==false} or ${comment.nickname ==nickName} or ${content.writer == nickName}" th:text="비밀댓글입니다." th:id="'comment-' + ${comment.getId()}">Comment content</p>
                       <small class="text-muted" th:text="${#temporals.format(comment.getCreatedAt(), 'yyyy-MM-dd HH:mm')}">Comment Date</small>
                       <div th:if="${comment.nickname == nickName}">

@@ -31,8 +31,8 @@ public class Content {
     private String title;
     @Column(length = 500)
     private String texts;
-    @OneToMany(fetch = FetchType.LAZY,orphanRemoval = true,mappedBy = "content")
-    private List<Image> images;
+    @OneToOne(fetch = FetchType.LAZY,orphanRemoval = true,mappedBy = "content")
+    private Image image;
 
     @OneToMany(mappedBy = "content",cascade = CascadeType.REMOVE,fetch = FetchType.LAZY)
     @OrderBy("id asc")
@@ -50,5 +50,20 @@ public class Content {
                 .texts(content.getTexts())
                 .build();
         return contentEditDto;
+    }
+    public void updateTitle(String title){
+        this.title=title;
+    }
+    public void updateTexts(String texts){
+        this.texts=texts;
+    }
+    public void updateImage(Image image){
+        this.image=image;
+    }
+    public void updateTeam(Team team){
+        this.team=team;
+    }
+    public void updatePosition(Position position){
+        this.position=position;
     }
 }

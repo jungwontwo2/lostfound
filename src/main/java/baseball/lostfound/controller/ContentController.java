@@ -90,6 +90,7 @@ public class ContentController {
             return "content/write-page";
         }
         if(bindingResult.hasErrors()){
+            System.out.println("bindingResult = " + bindingResult);
             String errorMessage ="제목, 내용, 팀, 위치를 올바르게 입력해주세요.\n";
             model.addAttribute("teams", Team.values());
             model.addAttribute("positions", Position.values());
@@ -128,7 +129,7 @@ public class ContentController {
     //글 수정페이지 가져오기
     @PostMapping("/contents/editPage/{id}")
     public String editContent(@PathVariable Long id, @ModelAttribute("content") ContentEditDto contentEditDto
-            , HttpServletRequest request,Authentication authentication){
+            , HttpServletRequest request,Authentication authentication,Model model){
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
         ContentResponseDto content = contentService.getContent(id);
         if(!content.getWriter().equals(customUserDetails.getNickname())){
@@ -138,9 +139,17 @@ public class ContentController {
             return "common/messageRedirect";
         }
         ContentEditDto contentEditDto1 = Content.toEditDto(content);
+        model.addAttribute("teams", Team.values());
+        model.addAttribute("positions", Position.values());
         contentEditDto.setTitle(contentEditDto1.getTitle());
         contentEditDto.setTexts(contentEditDto1.getTexts());
         //contentService.editContent(id, contentEditDto);
         return "content/edit-page";
+    }
+    @PostMapping("/contents/edit/{id}")
+    public String editContent(@PathVariable Long id,@ModelAttribute("content")ContentEditDto contentEditDto,
+                              BindingResult bindingResult) throws IOException {
+        contentService.editContent(id,contentEditDto);
+        return "redirect:/contents/"+id;
     }
 }
